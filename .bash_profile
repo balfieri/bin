@@ -1,3 +1,7 @@
+# ~/.bash_profile should have:
+# export SSHPASS="..."
+# source ~/Code/bin/.bash_profile
+#
 set -o vi
 
 export BASH_SILENCE_DEPRECATION_WARNING=1
