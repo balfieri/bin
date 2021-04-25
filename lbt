@@ -8,15 +8,16 @@ my $rm_dir = 1;
 
 # common code to move somewhere else
 #
-system( "mbt" );
+my $do_mbt = (@ARGV == 0) ? 1 : int( shift @ARGV );
+$do_mbt and system( "mbt" );
 chdir( $ENV{HOME} );
-system( "rm -fr ${dir}/*/*.out ${dir}/*/*.o ${dir}/*/*.exe ${dir}/*/*~ ${dir}/userdoc" );
+system( "rm -fr ${dir}/*/*.out ${dir}/*/*.o ${dir}/*/*.exe ${dir}/*/*~ ${dir}/*/*.gds ${dir}/*/*.vcd ${dir}/*/*.raw ${dir}/userdoc" );
 my $file = "${dir}.tar.gz";
 my $enc_file = "${file}.enc";
 -d $dir or die "ERROR: $dir does not exist\n";
 system( "tar cvfz ${file} $dir" ) == 0 or die "ERROR: tar failed\n";
 print "Encrypting $file...\n";
-system( "openssl aes-256-cbc  -pbkdf2 -in ${file} -out ${enc_file}" ) == 0 or die "ERROR: encryption failed\n";
+system( "openssl aes-256-cbc -salt -in ${file} -out ${enc_file}" ) == 0 or die "ERROR: encryption failed\n";
 print "Deleting ${file}...\n";
 system( "rm -f $file" ) == 0 or die "ERROR: rm of $file failed\n";
 if ( $rm_dir ) {
