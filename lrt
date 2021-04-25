@@ -1,0 +1,20 @@
+#!/usr/bin/perl
+#
+use strict;
+use warnings;
+
+my $dir = `cat ~/.default_tree`;
+
+# common code to move somewhere else
+#
+chdir( "~" );
+-d $dir and die "ERROR: ${dir} exists already, not going to overwrite it\n";
+my $file = "${dir}.tar.gz";
+my $enc_file = "${file}.enc";
+-f $enc_file or die "ERROR: ${enc_file} does not exist\n";
+
+print "Restoring from ${enc_file}...\n";
+system( "openssl aes-256-cbc -pbkdf2 -d -in $enc_file -out $file" ) == 0 or die "ERROR: could not decrypt $enc_file\n";
+system( "tar xvfz ${file}" ) == 0 or die "ERROR: could not untar $file\n";
+print "Deleting ${enc_file} ${file}...\n";
+system( "rm -f ${enc_file} ${file}" );

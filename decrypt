@@ -1,0 +1,8 @@
+#!/usr/bin/perl
+use strict;
+use warnings;
+
+@ARGV == 1 or die "usage : enc <file without .enc>\n";
+my $file = shift @ARGV;
+
+system( "openssl aes-256-cbc -salt -d -in ${file}.enc -out ${file}" ) == 0 or die "ERROR: encryption failed\n";

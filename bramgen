@@ -1,0 +1,739 @@
+#!/usr/bin/perl -w
+#
+# bramgen - experimental script to generate behavioral models that don't use #delays, etc.
+#
+parse_args();
+parse_ram_iface();
+gen_v_header();
+for $wr_port ( @{$wr_ports}, @{$rw_ports} ) { gen_v_wr( $wr_port ) }
+for $rd_port ( @{$rd_ports}, @{$rw_ports} ) { gen_v_rd( $rd_port ) }
+gen_v_footer();
+
+##########################################################################################
+
+##########################################################################################
+sub parse_args
+{
+    $ram = "";
+    $v_prefix = "";
+    $v_file = "";
+    $pgclamp_clamping = 1;
+    while( @ARGV ) 
+    {
+        $a = shift @ARGV;
+        if ( $a eq "-b" ) {
+            $v_file = shift @ARGV;
+        } elsif ( $a eq "-in_sfv_regress_mode" ) {
+            $v_prefix = "beh_";
+        } elsif ( $a eq "-no_pgclamp_clamping" ) {
+            $pgclamp_clamping = 0;
+        } elsif ( $a =~ /^nv_ram/ ) {
+            $ram = $a;
+        } else {
+            error( "unknown arg: $a" );
+        }
+    }
+    $ram eq "" and error( "no -<ram> given" );
+    $v_file eq "" and $v_file = "${ram}.v";
+    $v_prefix ne "" and $v_file =~ s/nv_ram_/${v_prefix}nv_ram_/;
+}
+##########################################################################################
+
+##########################################################################################
+sub parse_ram_iface
+{
+    # split apart the ram spec
+    #
+    $ram =~ /^nv_ram_([a-z]+)(_e\d+)?(_m\d)?_(\d+)x(\d+)(_\w+)?$/ or error( "bad ram spec: $ram" );
+    $options = $1;
+    @options = split( "", $options );
+    $e_spec = $2;
+    $D = int( $4 );
+    $D_M1 = $D - 1;
+    $W = int( $5 );
+    $variant = $6;
+    $add_iwe = defined $variant && $variant eq "_fifola";
+    $add_iwe eq "" and $add_iwe = 0;
+    $h_based_on_we = defined $variant && $variant eq "_smkcustomnewh";
+    $h_based_on_we eq "" and $h_based_on_we = 0;
+    $wr_port_count = 0;
+    $rd_port_count = 0;
+    $rw_port_count = 0;
+    $async = 1;
+    $async_rd = 0;
+    $pgclamp = 0;
+    $ore = 0;
+    $orb = 0;
+    $ram_dout_hold = 0;
+    $writethrough = 0;
+    $writethrough_hold = 0;
+    $expanded_read_port = 0;
+    $comb_bypass = 0;
+    $wr_chip_enable = 0;
+    $L = 1;
+    $LW = $W;
+    if ( defined $e_spec ) {
+        $e_spec =~ /^_e(\d+)$/ or error( "internal error with e_spec" );
+        $LW = int( $1 );
+        $L = int( $W / $LW );
+        ($L * $LW) == $W or error( "lane width ($LW) is not evenly divisible into width ($W)" );
+    }
+    $ctxsw = 0;
+    $ctxsw_ramchain = 0;
+    $no_test_wrapper = 0;
+    $no_test_wrapper_test_ports = 0;
+    $iddq_mode = 0;
+    $no_ram_access = 0;
+    for( @options ) 
+    {
+        /^w$/ and $wr_port_count++;
+        /^r$/ and $rd_port_count++;
+        /^b$/ and $rw_port_count++;
+        /^s$/ and $async = 0;
+        /^a$/ and $async_rd = 1;
+        /^l$/ and $pgclamp = 1;
+        /^p$/ and $ore = 1;
+        /^q$/ and do { $ore = 1; $orb = 1 };
+        /^d$/ and $ram_dout_hold = 1;
+        /^t$/ and do { $writethrough = 1; $writethrough_hold = 1 };
+        /^v$/ and $writethrough = 1;
+        /^x$/ and $expanded_read_port = 1;
+        /^h$/ and $comb_bypass = 1;
+        /^e$/ and $wr_chip_enable = 1;
+        /^c$/ and $ctxsw = 1;
+        /^g$/ and do { $ctxsw = 1; $ctxsw_ramchain = 1 };
+        /^n$/ and $no_test_wrapper = 1;
+        /^f$/ and do { $no_test_wrapper = 1; $no_test_wrapper_test_ports = 1 };
+        /^i$/ and $iddq_mode = 1;
+        /^j$/ and $no_ram_access = 1;
+    }
+
+    # derived info
+    #
+    $add_iwe_sync = $add_iwe && !$async;
+    $A = log2( $D );
+    $RA = log2( $D + $add_iwe_sync );
+    $A_M1 = $A - 1;
+    $RA_M1 = $RA - 1;
+    $W_M1 = $W - 1;
+    $L_M1 = $L - 1;
+    $lbrack = ($L_M1 == 0) ? "" : "{${L}\{";
+    $rbrack = ($L_M1 == 0) ? "" : "}}";
+
+    $clks = [];
+    $mod_ports = [];
+    $wr_ports = [];
+    $rd_ports = [];
+    $rw_ports = [];
+    ($wr_port_count == 0 && $rd_port_count == 0 && $rw_port_count == 1) and $async = 0;
+    !$async and push @{$clks}, $clk;
+    !$async and push @{$mod_ports}, ["clk", "input", 1];
+    for( $i = 0; $i < $wr_port_count; $i++ ) 
+    {
+        $clk = "clk";
+        $suff = ($wr_port_count == 1) ? "" : $i;
+        if ( $async ) {
+            $clk = "clk_w${suff}";
+            push @{$clks}, $clk;
+            push @{$mod_ports}, [$clk, "input", 1];
+        }
+        $wr_port = { kind => "wr",
+                     clk  => $clk,
+                     iwe  => $add_iwe ? "iwe${suff}" : "",
+                     wce  => $wr_chip_enable ? "wce${suff}" : "",
+                     we   => "we${suff}",
+                     wa   => "wa${suff}",
+                     di   => "di${suff}",
+                     byp_sel => $comb_bypass ? "byp_sel${suff}" : "",
+                     dbyp => $comb_bypass ? "dbyp${suff}" : "",
+                   };                   
+        push @{$wr_ports}, $wr_port;
+        $wr_port->{iwe} ne "" and push @{$mod_ports}, [$wr_port->{iwe}, "input", 1];
+        $wr_port->{wce} ne "" and push @{$mod_ports}, [$wr_port->{wce}, "input", 1];
+        push @{$mod_ports}, [$wr_port->{we}, "input", $L];
+        push @{$mod_ports}, [$wr_port->{wa}, "input", $A];
+        push @{$mod_ports}, [$wr_port->{di}, "input", $W];
+        $wr_port->{byp_sel} ne "" and push @{$mod_ports}, [$wr_port->{byp_sel}, "input", 1];
+        $wr_port->{dbyp}    ne "" and push @{$mod_ports}, [$wr_port->{dbyp},    "input", $W];
+    }
+
+    for( $i = 0; $i < $rd_port_count; $i++ ) 
+    {
+        $clk = "clk";
+        $suff = ($rd_port_count == 1) ? "" : $i;
+        if ( $async ) {
+            $clk = "clk_r${suff}";
+            push @{$clks}, $clk;
+            push @{$mod_ports}, [$clk, "input", 1];
+        }
+        $rd_port = { kind => "rd",
+                     clk  => $clk,
+                     re   => "re${suff}",
+                     ra   => "ra${suff}",
+                     ore  => $ore ? "ore${suff}" : "",
+                     orb  => $orb ? "orb${suff}" : "",
+                     dout => "dout${suff}"
+                   };
+        push @{$rd_ports}, $rd_port;
+        push @{$mod_ports}, [$rd_port->{re}, "input", 1];
+        push @{$mod_ports}, [$rd_port->{ra}, "input", $RA];
+        $rd_port->{ore} ne "" and push @{$mod_ports}, [$rd_port->{ore}, "input", 1];
+        $rd_port->{orb} ne "" and push @{$mod_ports}, [$rd_port->{orb}, "input", 1];
+        push @{$mod_ports}, [$rd_port->{dout}, "output", $W];
+    }
+
+    for( $i = 0; $i < $rw_port_count; $i++ ) 
+    {
+        $clk = "clk";
+        $suff = ($rw_port_count == 1) ? "" : $i;
+        if ( $async ) {
+            $clk = "clk${suff}";
+            push @{$clks}, $clk;
+            push @{$mod_ports}, [$clk, "input", 1];
+        }
+        $rw_port = { kind => "rw",
+                     clk  => $clk,
+                     iwe  => "",
+                     wce  => $wr_chip_enable ? "wce${suff}" : "",
+                     we   => "we${suff}",
+                     a    => "a${suff}",
+                     wa   => "wa${suff}",  # not in actual ports
+                     ra   => "ra${suff}",  # not in actual ports
+                     di   => "di${suff}",
+                     byp_sel => "",
+                     dbyp => "",
+                     re   => "re${suff}",
+                     ore  => $ore ? "ore${suff}" : "",
+                     orb  => $orb ? "orb${suff}" : "",
+                     dout => "dout${suff}"
+                   };
+        push @{$rw_ports}, $rw_port;
+        $rw_port->{iwe} ne "" and push @{$mod_ports}, [$rw_port->{iwe}, "input", 1];
+        $rw_port->{wce} ne "" and push @{$mod_ports}, [$rw_port->{wce}, "input", 1];
+        push @{$mod_ports}, [$rw_port->{we}, "input", $L];
+        push @{$mod_ports}, [$rw_port->{a}, "input", $A];
+        push @{$mod_ports}, [$rw_port->{di}, "input", $W];
+        $rw_port->{byp_sel} ne "" and push @{$mod_ports}, [$rw_port->{byp_sel}, "input", 1];
+        $rw_port->{dbyp}    ne "" and push @{$mod_ports}, [$rw_port->{dbyp},    "input", $W];
+        push @{$mod_ports}, [$rw_port->{re}, "input", 1];
+#        push @{$mod_ports}, [$rw_port->{ra}, "input", $RA];
+        $rw_port->{ore} ne "" and push @{$mod_ports}, [$rw_port->{ore}, "input", 1];
+        $rw_port->{orb} ne "" and push @{$mod_ports}, [$rw_port->{orb}, "input", 1];
+        push @{$mod_ports}, [$rw_port->{dout}, "output", $W];
+    }
+
+    $pgclamp       and push @{$mod_ports}, ["pgclamp", "input", 1]; 
+    $iddq_mode     and push @{$mod_ports}, ["iddq_mode", "input", 1];
+    if ( $ctxsw ) {
+        push @{$mod_ports}, ["ctx_reset_", "input", 1];
+        push @{$mod_ports}, ["ctxsw_in_progress", "input", 1];
+        if ( $ctxsw_ramchain ) {
+            push @{$mod_ports}, ["ctx_override", "input", 1];
+            push @{$mod_ports}, ["ctx_in", "input", 51];
+            push @{$mod_ports}, ["ctx_out", "output", 33];
+        } else {
+            push @{$mod_ports}, ["clk_nobg", "input", 1];
+            push @{$mod_ports}, ["host2all_force_clks_on", "input", 1];
+            push @{$mod_ports}, ["ci", "input", 34];
+            push @{$mod_ports}, ["co", "output", 34];
+            push @{$mod_ports}, ["ram_clock_enable", "output", 1];
+        }
+    }
+    $no_ram_access and push @{$mod_ports}, ["debug_en", "input", 1];
+    if ( $expanded_read_port ) {
+        for $i ( 0 .. $D_M1 ) 
+        {
+            push @{$mod_ports}, ["Q${i}", "output", $W];
+        }
+    }
+}
+##########################################################################################
+
+##########################################################################################
+sub gen_v_header
+{
+    print "Generating ${v_file}...\n";
+    system( "rm -f ${v_file}" );
+    open( V, ">${v_file}" ) or error( "unable to open ${v_file} for writing" );
+    print V <<EOF;
+// AUTO-GENERATED - DO NOT EDIT OR CHECK IN
+//
+`timescale 1ns/10ps
+
+module ${v_prefix}${ram}(
+EOF
+    $prefix = "  ";
+    for $p ( @{$mod_ports} )
+    {
+        $name = $p->[0];
+        $dir  = $p->[1];
+        $w    = $p->[2];
+        print V "    ${prefix}${name}\n";
+        $prefix = ", ";
+    }
+    print V "    );\n\n";
+    for $p ( @{$mod_ports} )
+    {
+        $name = $p->[0];
+        $dir  = $p->[1];
+        $w    = $p->[2];
+        $w_m1 = $w - 1;
+        $rng  = ($w <= 1) ? "" : " [${w_m1}:0]";
+        print V "${dir}${rng} ${name};\n";
+    }
+
+    print V <<EOF;
+
+reg [${W_M1}:0] M[${D_M1}:0];  
+EOF
+}
+##########################################################################################
+
+##########################################################################################
+sub gen_v_wr
+{
+    my $wr_port = shift;
+
+    my $wa = ($wr_port->{kind} eq "wr") ? "wa" : "a";
+    my $wce_and_and = "";
+    my $wce_and = "";
+    if ( $wr_port->{wce} ne "" ) {
+        $wce_and_and = "$wr_port->{wce} && ";
+        if ( $L > 1 ) {
+            $wce_and = "${lbrack}$wr_port->{wce}${rbrack} & ";
+        } else {
+            $wce_and = "$wr_port->{wce} & ";
+        }
+    }
+
+    print V <<EOF;
+
+// wr port
+//
+EOF
+    if ( $wr_port->{iwe} ne "" ) {
+        print V <<EOF;
+reg [${L_M1}:0] $wr_port->{iwe}_d;
+reg [${W_M1}:0] $wr_port->{di}_d;
+EOF
+    }
+    print V <<EOF;
+reg [${L_M1}:0] $wr_port->{we}_d;
+reg [${A_M1}:0] $wr_port->{$wa}_d;
+EOF
+
+    print V <<EOF;
+
+always @( posedge $wr_port->{clk} ) begin
+EOF
+    if ( $pgclamp && $pgclamp_clamping ) {
+        print V <<EOF;
+    if ( !pgclamp ) begin
+EOF
+    }
+    for $i ( 0 .. $L_M1 ) 
+    {
+        $idx = ($L_M1 == 0) ? "" : "[$i]";
+        $lsb = $i * $LW;
+        $msb = $lsb + $LW - 1;
+        $rng = ($L_M1 == 0) ? "" : "[${msb}:${lsb}]";
+        $di = "$wr_port->{di}${rng}";
+        if ( ($wr_port_count + $rw_port_count) > 1 ) {
+            # look for write-write conflicts and X data if it occurs
+            #
+            $wr_wr_conflict = "";
+            for $wr ( @{$wr_ports}, @{$rw_ports} ) 
+            {
+                next if $wr_port->{we} eq $wr->{we};
+                $wr_wr_conflict ne "" and $wr_wr_conflict .= " | ";
+                $wr_wr_conflict .= "($wr->{we}${idx} & ($wr_port->{$wa} == $wr->{$wa}))";
+            }
+            $di = "($wr_wr_conflict) ? {${LW}\{1'bx}} : $di";
+        }
+        if ( $wr_port->{iwe} eq "" ) {
+            print V <<EOF;
+    if ( ${wce_and_and}$wr_port->{we}${idx} ) begin
+        M[$wr_port->{$wa}]${rng} <= $di;
+EOF
+            if ( $L == 1 ) {
+                print V <<EOF;
+        $wr_port->{$wa}_d <= $wr_port->{$wa};
+EOF
+            }
+            print V <<EOF;
+    end
+EOF
+        } else {
+            print V <<EOF;
+    if ( $wr_port->{iwe}${idx} ) begin
+        $wr_port->{di}_d${rng} <= $wr_port->{di}${rng};
+    end
+    if ( ${wce_and_and}$wr_port->{we}${idx} ) begin
+        M[$wr_port->{$wa}]${rng} <= $wr_port->{iwe}${idx} ? $di : $wr_port->{di}_d${rng};
+EOF
+            if ( $L == 1 ) {
+                print V <<EOF;
+        $wr_port->{$wa}_d <= $wr_port->{$wa};
+EOF
+            }
+            print V <<EOF;
+    end
+EOF
+        }
+    }
+    if ( $wr_port->{iwe} ne "" ) {
+        print V <<EOF;
+    $wr_port->{iwe}_d <= $wr_port->{iwe};
+EOF
+    }
+    print V <<EOF;
+    $wr_port->{we}_d <= ${wce_and}$wr_port->{we};
+EOF
+    if ( $L > 1 ) {
+        print V <<EOF;
+    if ( ${wce_and_and}|$wr_port->{we} ) begin
+        $wr_port->{$wa}_d <= $wr_port->{$wa};
+    end
+EOF
+    }
+    if ( $pgclamp && $pgclamp_clamping ) {
+        print V <<EOF;
+    end
+EOF
+    }
+    print V <<EOF;
+end
+EOF
+
+}
+##########################################################################################
+
+##########################################################################################
+sub gen_v_rd
+{
+    my $rd_port = shift;
+
+    my $wa = ($rd_port->{kind} eq "rd") ? "wa" : "a";
+    my $ra = ($rd_port->{kind} eq "rd") ? "ra" : "a";
+    $ra_orig = $ra;
+
+    print V <<EOF;
+
+// rd port
+//
+EOF
+    if ( !$async_rd ) {
+        print V <<EOF;
+reg  [0:0] $rd_port->{re}_d;
+reg  [${RA_M1}:0] $rd_port->{ra}_d;
+EOF
+        $re = "$rd_port->{re}_d";
+        $ra = "$rd_port->{ra}_d";
+    } else {
+        print V <<EOF;
+reg  [${RA_M1}:0] $rd_port->{ra}_d;
+wire [${RA_M1}:0] $rd_port->{ra}_last = $rd_port->{re} ? $rd_port->{$ra} : $rd_port->{ra}_d;
+EOF
+        $re = "$rd_port->{re}";
+        $ra = "$rd_port->{ra}_last";
+    }
+
+    if ( $async ) {
+        $or_async_write_clobber_check = ($L == 1) ? " || " : " | ";
+        $L > 1 and $or_async_write_clobber_check .= "{";
+        print V <<EOF;
+reg  [31:0] rd_counter;  // incremented by read side
+initial     rd_counter = 32'd0;  // for 2-state FV, any initial value is fine; for 4-state FV, it must be reset to non-X
+EOF
+        if ( $async_rd ) {
+            print V <<EOF;
+wire [31:0] rd_counter_last = $rd_port->{re} ? (rd_counter + 1'd1) : rd_counter;
+EOF
+        }
+        for $i ( 0 .. $L_M1 ) 
+        {
+            $idx = ($L_M1 == 0) ? "" : "$i";
+            print V <<EOF;
+reg  [31:0] rd_counter_last_clobbered${idx};  // set by write side when write finishes
+initial     rd_counter_last_clobbered${idx} = 32'd0;
+EOF
+            $i > 0 and $or_async_write_clobber_check .= ",";
+            $_last = $async_rd ? "_last" : "";
+            $or_async_write_clobber_check .= "rd_counter${_last} == rd_counter_last_clobbered${idx}";
+        }
+        $L > 1 and $or_async_write_clobber_check .= "}";
+    }
+
+    $and_inv_writethrough = "";
+    $or_clobbered_d = " | (${lbrack}~${re}${rbrack} & $rd_port->{dout}_ram_clobbered_d)";
+    $wr_port = ($rd_port->{kind} eq "rd") ? $wr_ports->[0] : $rd_port;
+    if ( $writethrough ) {
+        # note: we shouldn't have more than one wr_port, so no need to do this in a loop
+        print V <<EOF;
+wire [${L_M1}:0] $rd_port->{dout}_ram_writethrough = $wr_port->{we}_d & ${lbrack}${re}${rbrack} & ${lbrack}($wr_port->{$wa}_d == $ra)${rbrack};
+reg  [${L_M1}:0] $rd_port->{dout}_ram_writethrough_d;
+EOF
+        $and_inv_writethrough = " & ~$rd_port->{dout}_ram_writethrough";
+        !$writethrough_hold and $or_clobbered_d = " | (${lbrack}~${re}${rbrack} & ($rd_port->{dout}_ram_clobbered_d | $rd_port->{dout}_ram_writethrough_d))";
+    }
+    $ram_clobbered_expr = "";
+    for $wr ( @{$wr_ports}, @{$rw_ports} ) 
+    {
+        $ram_clobbered_expr ne "" and $ram_clobbered_expr .= " | ";
+        if ( !$ram_dout_hold ) {
+            $ram_clobbered_expr .= "($wr->{we}_d & ${lbrack}($wr->{$wa}_d == $ra)${rbrack}${and_inv_writethrough})";
+        } else {
+            $ram_clobbered_expr .= "($wr->{we}_d & ${lbrack}($rd_port->{re}_d && $wr->{$wa}_d == $rd_port->{$ra_orig}_d)${rbrack}${and_inv_writethrough})";
+        }
+    }
+    if ( $async ) {
+        $ram_clobbered_expr .= $or_async_write_clobber_check;
+    } else {
+        $ram_clobbered_expr .= $or_clobbered_d;
+        print V <<EOF;
+reg  [${L_M1}:0] $rd_port->{dout}_ram_clobbered_d;
+EOF
+    }
+    print V <<EOF;
+wire [${L_M1}:0] $rd_port->{dout}_ram_clobbered = $ram_clobbered_expr;
+EOF
+
+    if ( $L_M1 > 0 ) {
+        print V <<EOF;
+wire [${W_M1}:0] $rd_port->{dout}_ram;
+EOF
+    } 
+    if ( $ram_dout_hold ) {
+        print V <<EOF;
+reg  [${W_M1}:0] $rd_port->{dout}_ram_d;  // for 'd' option
+EOF
+    }
+    for $i ( 0 .. $L_M1 ) 
+    {
+        $idx = ($L_M1 == 0) ? "" : "[$i]";
+        $lsb = $i * $LW;
+        $msb = $lsb + $LW - 1;
+        $rng = ($L_M1 == 0) ? "" : "[${msb}:${lsb}]";
+        $decl = ($L_M1 == 0) ? "wire [${W_M1}:0]" : "assign";
+        $dout_raw = "M[${ra}]${rng}";
+        $ram_dout_hold and $dout_raw = "$rd_port->{re}_d ? $dout_raw : $rd_port->{dout}_ram_d${rng}";
+        print V <<EOF;
+$decl $rd_port->{dout}_ram${rng} = $rd_port->{dout}_ram_clobbered${idx} ? {${LW}\{1'bx}} : ${dout_raw};
+EOF
+    }
+
+    $dout_ram = "$rd_port->{dout}_ram";
+    if ( $wr_port->{byp_sel} ne "" ) {
+        if ( !$h_based_on_we ) {
+            $dout_ram = "($wr_port->{byp_sel} ? $wr_port->{dbyp} : $dout_ram)";
+        } else {
+            print V <<EOF;
+wire [${W_M1}:0] $rd_port->{dout}_ram_bypass;
+EOF
+            for $i ( 0 .. $L_M1 ) 
+            {
+                $idx = ($L_M1 == 0) ? "" : "[$i]";
+                $lsb = $i * $LW;
+                $msb = $lsb + $LW - 1;
+                $rng = ($L_M1 == 0) ? "" : "[${msb}:${lsb}]";
+                $and_wce = $wr_chip_enable ? " & $wr_port->{wce}" : "";
+                print V <<EOF;
+assign $rd_port->{dout}_ram_bypass${rng} = ($wr_port->{byp_sel} & $wr_port->{we}\[$i]${and_wce}) ? $wr_port->{dbyp}${rng} : ${dout_ram}${rng};
+EOF
+            }
+            $dout_ram = "$rd_port->{dout}_ram_bypass";
+        }
+    }
+
+    if ( $rd_port->{ore} eq "" ) {
+        if ( $add_iwe_sync ) {
+            print V <<EOF;
+assign $rd_port->{dout} = ($ra == ${RA}'d${D}) ? $wr_port->{di}_d : $dout_ram;
+EOF
+        } else {
+            print V <<EOF;
+assign $rd_port->{dout} = $dout_ram;
+EOF
+        }
+    } else {
+        $_r = ($rd_port->{orb} ne "") ? "_r" : "";
+        print V <<EOF;
+reg  [${W_M1}:0] $rd_port->{dout}_r;
+EOF
+        if ( $rd_port->{orb} eq "" ) {
+            print V <<EOF;
+assign $rd_port->{dout} = $rd_port->{dout}_r;
+EOF
+        } else {
+            print V <<EOF;
+assign $rd_port->{dout} = $rd_port->{orb} ? $dout_ram : $rd_port->{dout}_r;
+EOF
+        }
+    }
+
+    print V <<EOF;
+
+always @( posedge $rd_port->{clk} ) begin
+EOF
+    $and_not_pgclamp = ($pgclamp && $pgclamp_clamping) ? " && !pgclamp" : "";
+    if ( !$async_rd ) {
+        print V <<EOF;
+    $rd_port->{re}_d <= $rd_port->{re}${and_not_pgclamp};
+EOF
+    }
+    if ( $pgclamp && $pgclamp_clamping ) {
+        print V <<EOF;
+    if ( !pgclamp ) begin
+EOF
+    }
+    print V <<EOF;
+    if ( $rd_port->{re} ) begin
+        $rd_port->{ra}_d <= $rd_port->{$ra_orig};
+EOF
+    if ( $async ) {
+        print V <<EOF;
+        rd_counter <= rd_counter + 1;
+EOF
+    }
+    print V <<EOF;
+    end
+EOF
+    if ( $ram_dout_hold ) {
+        print V <<EOF;
+    if ( $rd_port->{re}_d ) begin
+        $rd_port->{dout}_ram_d <= $rd_port->{dout}_ram;
+    end
+EOF
+    }
+    if ( $rd_port->{ore} ne "" ) {
+        print V <<EOF;
+    if ( $rd_port->{ore} ) begin
+        $rd_port->{dout}_r <= $dout_ram;
+    end
+EOF
+    }
+    if ( $writethrough ) {
+        print V <<EOF;
+    $rd_port->{dout}_ram_writethrough_d <= $rd_port->{dout}_ram_writethrough;
+EOF
+    }
+    if ( !$async ) {
+        print V <<EOF;
+    $rd_port->{dout}_ram_clobbered_d <= $rd_port->{dout}_ram_clobbered;
+EOF
+    }
+    if ( $pgclamp && $pgclamp_clamping ) {
+        print V <<EOF;
+    end
+EOF
+    }
+    print V <<EOF;
+end
+EOF
+
+    if ( $async ) {
+        for $wr ( @{$wr_ports}, @{$rw_ports} ) 
+        {
+            print V <<EOF;
+
+always @( posedge $wr->{clk} ) begin
+EOF
+            if ( $pgclamp && $pgclamp_clamping ) {
+                print V <<EOF;
+    if ( !pgclamp ) begin
+EOF
+            }
+            for $i ( 0 .. $L_M1 ) 
+            {
+                $idx  = ($L_M1 == 0) ? "" : "[$i]";
+                $suff = ($L_M1 == 0) ? "" : "$i";
+                $last_vs_d = $async_rd ? "last" : "d";
+                print V <<EOF;
+    if ( $wr->{we}_d${idx} && $wr->{$wa}_d == $rd_port->{ra}_${last_vs_d} ) begin
+        rd_counter_last_clobbered${suff} <= rd_counter;
+    end
+EOF
+            }
+            if ( $pgclamp && $pgclamp_clamping ) {
+                print V <<EOF;
+    end
+EOF
+            }
+            print V <<EOF;
+end
+EOF
+        }
+    }
+}
+##########################################################################################
+
+##########################################################################################
+sub gen_v_footer 
+{
+    if ( $expanded_read_port ) {
+        print V <<EOF;
+
+// expanded read port
+//
+EOF
+        for $i ( 0 .. $D_M1 ) 
+        {
+            print V "assign Q${i} = M[$i];\n";
+        }
+    }
+
+    if ( $ctxsw ) {
+        print V <<EOF;
+
+// ctxsw outputs (temporary hacks for now)
+// 
+EOF
+        if ( $ctxsw_ramchain ) {
+            print V <<EOF;
+assign ctx_out = ctx_in[32:0];
+EOF
+        } else {
+            print V <<EOF;
+assign co = ci;
+assign ram_clock_enable = 1'b0;
+EOF
+        }
+    }
+    print V <<EOF;
+
+endmodule
+EOF
+}
+##########################################################################################
+
+##########################################################################################
+sub log2 
+{
+    my( $n ) = @_;
+    my( $r );
+    
+    $n = 2 * $n - 1;
+    $r = 0;
+    while( $n > 1 ) {
+	$r++;
+	$n >>= 1;
+    }
+    return $r;
+}
+##########################################################################################
+
+##########################################################################################
+sub error
+{
+    my $msg = shift;
+
+    print <<EOF;
+
+FAIL: $msg
+
+bramgen <ram> [-v <file>]
+
+EOF
+    exit 1;
+}
+##########################################################################################

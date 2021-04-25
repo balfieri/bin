@@ -1,0 +1,96 @@
+#!/usr/bin/perl 
+use strict;
+use warnings;
+my $cmd_en = (@ARGV > 0) ? (shift @ARGV) : 1;
+sub cmd { my $c = shift; print "${c}\n"; !$cmd_en and return; system( $c ) == 0 or die "ERROR: cmd failed: $c: $!\n"; }
+
+my $GB_max = 19;
+
+my $do_downloads = (@ARGV > 0) ? (shift @ARGV) : 0;
+
+my @s3_tar_files = `aws s3 ls imustcook.com/xplane/ | grep zOrtho`;
+my $s3_exists = {};
+for my $s ( @s3_tar_files ) 
+{
+    chomp $s;
+    $s =~ /^(\S+)\s+(\S+)\s+(\d+)\s+(\S+)$/ or die "ERROR: bad s3 line (1): '$s'\n";
+    $s = $4;
+    $s =~ s/\.tar\.gz$//;
+    $s =~ s/\.part\d+$//;
+    $s3_exists->{$s} = 1;
+}
+
+my @scenes = `ls | grep 'zOrtho'`;
+for my $s ( @scenes ) 
+{
+    chomp $s;
+    if ( defined $s3_exists->{$s} ) {
+        print "${s} is already on s3\n";
+    } else {
+        print "${s} needs to be uploaded to s3\n";
+        cmd( "rm -f ${s}.tar.gz" );
+        my $GB = `du -sg ${s}`;
+        chomp $GB;
+        $GB =~ s/\s*(\d+)\s+.*/$1/ or die "Bad du: $GB\n";
+        $GB == 0 and $GB = 1;
+        my @files = `find ${s} -depth -print -type f`;
+        my $file_cnt = int( @files );
+        print "${s} has ${GB} GB and ${file_cnt} files\n";
+        my $C = int( ($GB + $GB_max - 1) / $GB_max );
+        print "${s} requires ${C} part(s)\n";
+        my $file_cnt_max = int( $file_cnt / $C );
+        for my $i ( 0 .. $C-1 )
+        {
+            my $suff = ($C == 1) ? "" : ".part${i}";
+            my $f = "${s}${suff}.tar.gz";
+            my $min = $i*$file_cnt_max;
+            my $max = ($i == ($C-1)) ? ($file_cnt-1) : ($min + $file_cnt_max - 1);
+            print "${f} will contain files $min .. $max\n";
+            open( N, ">,names" ) or die "ERROR: could not open ,names for output\n"; 
+            for my $j ( $min .. $max )
+            {
+                print N $files[$j];
+            }
+            close( N );
+            cmd( "tar cvfz ${f} -T ,names" );
+            cmd( "aws s3 cp ${f} s3://imustcook.com/xplane/${f}" );
+            cmd( "rm -f ${f}" );
+            cmd( "rm -f ,names" );
+        }
+    }
+}
+
+@s3_tar_files = `aws s3 ls imustcook.com/xplane/ | grep zOrtho`;
+open( I, ">index.html" ) or die "ERROR: could not open index.html for writing\n";
+print I "<html>\n";
+print I "<p>To find the tile anchor coordinates for an airport, go to <a href=https://openflights.org/html/apsearch>openflights.org</a>, type in the ICAO (e.g., KRDU), click search and then load, and then round down. So if you get 35.421 and -79.657, the tile anchor would be +35-080, not +35-079.  If the tile you want is not below, then let me know and I'll try to generate it for you.</p>\n";
+print I "<p>Download the desired .tar.gz file, then decompress and untar into Custom Scenery, and add a line to your scenery_packs.ini toward the bottom.</p>\n";
+print I "<p>NOTE: AWS does not allow downloads greater than 20GB, so those .tar.gz files were split up into multiple parts.  Download all parts and untar in order.</p>";
+print I "<ul>\n";
+for my $s ( @s3_tar_files ) 
+{
+    chomp $s;
+    $s =~ /^(\S+)\s+(\S+)\s+(\d+)\s+(\S+)$/ or die "ERROR: bad s3 line (2): $s\n";
+    my $GB = int( $3 / (1024*1024*1024) + 0.5 );
+    my $f = $4;
+    print I "<li><a href=${f}>${f}</a> (${GB} GB)</li>\n";
+    my $d = $f;
+    $d =~ s/\.tar.gz$//;
+    $d =~ s/\.part\d+$//;
+    if ( !-d $d ) {
+        print "NOTE: $d does not exist here, but does exist on S3\n";
+        if ( $do_downloads ) {
+            print "Downloading $f...\n";
+            cmd( "aws s3 cp s3://imustcook.com/xplane/$f $f" );
+            cmd( "tar xvfz $f" );
+            cmd( "rm -f $f" );
+        }
+    }
+}
+print I "</ul>\n";
+print I "</html>\n";
+close( I );
+cmd( "aws s3 rm s3://imustcook.com/xplane.index.html" );
+cmd( "aws s3 cp index.html s3://imustcook.com/xplane/index.html" );
+cmd( "aws s3 rm s3://www.imustcook.com/xplane.index.html" );
+cmd( "aws s3 cp index.html s3://www.imustcook.com/xplane/index.html" );

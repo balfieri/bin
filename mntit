@@ -1,0 +1,17 @@
+#!/usr/bin/perl
+#
+use strict;
+use warnings FATAL => 'all';
+
+my $USER = "balfieri";
+
+sub fatal ($) { die "ERROR: " . shift . "\n" }
+sub cmd   ($) { my $c = shift; system( $c ) == 0 or fatal "cmd failed: $c" }
+
+#system( "mkdir -p ~/${USER}" );
+#system( "mkdir -p /Volumes/cameras" );
+#system( "mkdir -p /Volumes/scratch" );
+#system( "mount_smbfs //${USER}\@netapp59.nvidia.com/${USER} ~/${USER}" );
+#system( "mount_smbfs //${USER}\@sc-netapp47.nvidia.com/scratch.balfieri_volta ~/${USER}" );
+system( "mkdir -p ~/turbosquid" );
+system( "mount_smbfs -o rdonly //${USER}\@dc2-cdot49-sw-svm02.nvidia.com/project.omni_turbosquid ~/turbosquid" );

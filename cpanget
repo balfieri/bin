@@ -1,0 +1,12 @@
+#!perl -w
+#
+sub cmd($) 
+{
+    my $s = shift;
+    system( $s ) or die "ERROR: cmd failed: $s\n";
+}
+
+for my $pkg ( @ARGV )
+{
+    cmd "sudo perl -MCPAN -e \'install ${pkg}\'";
+}
