@@ -351,6 +351,6 @@ alias vprt='$c/openvdb/build/openvdb/cmd/vdb_print'
 alias ve='$c/vdbedit/vdbedit.x'
 alias isync='cd $d; find . ! -path "*.icloud" \( -exec echo {} \; -a -exec touch {} \; \)'
 
+alias dds='echo `pwd` > ~/.default_dir'
 alias dd='cd `cat ~/.default_dir`'
-dds() { echo "$1" > ~/.default_dir; dd; }
 dd
