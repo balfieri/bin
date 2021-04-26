@@ -160,8 +160,6 @@ gppl() { grep -i "$1" $cs/aviation.txt; }
 
 alias tmcc='tmux -CC'
 alias tmcca='tmux -CC attach'
-#export ITERM_ENABLE_SHELL_INTEGRATION_WITH_TMUX=1
-#source ~/.iterm2_shell_integration.bash 
 alias ic='imgcat'
 alias ico='imgcat output.png'
 
