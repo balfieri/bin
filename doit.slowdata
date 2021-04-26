@@ -1,0 +1,12 @@
+#!/bin/sh
+PATH=/usr/local/bin:/usr/local/sbin:~/bin:/usr/bin:/bin:/usr/sbin:/sbin
+
+# backup important things to /Volumes/SLOWDATA (external hard drive)
+#
+rsync -av ~/Backups                     /Volumes/SLOWDATA
+rsync -av ~/IDrive/*                    /Volumes/SLOWDATA/IDrive
+rsync -av ~/scenes                      /Volumes/SLOWDATA
+rsync -av ~/Code                        /Volumes/SLOWDATA
+rsync -av ~/.[_a-zA-Z0-9]*              /Volumes/SLOWDATA/home
+rsync -av ~/Music                       /Volumes/SLOWDATA
+rsync -av ~/iTunes                      /Volumes/SLOWDATA

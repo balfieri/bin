@@ -1,0 +1,7 @@
+cd ~
+export date=`date +%Y_%m_%d`
+export tar=/Volumes/SLOWDATA/bobbo.iTunes.${date}.tar.gz
+tar cvfz ${tar} iTunes
+gpg --encrypt --recipient bob_alfieri@yahoo.com ${tar}
+aws s3 cp ${tar}.gpg s3://alfieri/
+rm -f ${tar}
