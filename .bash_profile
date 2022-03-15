@@ -12,7 +12,8 @@ export n=$d/__NVidia
 export c=~/Code
 export b=$c/bin
 export a=$d/Aviation
-export cs=$c/study
+export cs=$c/cs
+export cst=$c/study
 export at=$a/Trips
 export ca=$c/aws
 export cc=$c/cordic
@@ -58,8 +59,8 @@ export nrc=$nr/cordic
 export nre=$nr/scenes
 export nrs=$nr/simplert
 export nrsa=$nr/simplert/debugastc
-export nrsb=$nr/simplert/beams
-export nrsc=$nr/simplert/compression
+export nrb=$nr/bvh
+export nrsc=$nr/compression
 export nrsr=$nr/simplert/reports
 export nrsrm=$nr/simplert/reports/movie
 export nrv=$nr/v
@@ -90,6 +91,7 @@ export ngcmaba=$ngcma/bsimcmg/admsva
 export fd=/Volumes/SAMSUNG
 export fxc=$fd/xplane11/Custom_Scenery
 export fp=$c/flightplan
+export fs=$c/flightsim
 export xp=~/xplane1150
 export xw=s3://imustcook.com/xplane/
 export xc=$x/*ery
@@ -123,6 +125,7 @@ alias gdmr='git fetch; git diff master origin/master'
 alias gdcr='git fetch; git diff --cached origin/master'
 alias gf='git fetch'
 alias gm='git merge'
+alias gprm='git filter-repo --invert-paths --path'
 alias gst='git stash push'                 
 alias gstp='git stash pop'
 alias gstl='git stash list'          
@@ -151,16 +154,20 @@ alias sticks='cd $n/sticks; /usr/local/opt/perl@5.18/bin/perl sticks.pl'
 alias vds='cd $nrs; vi reports/doit.space'
 alias ds='cd $nrs; reports/doit.space'
 alias vu='vsim tb_NV_vu'
-alias ppl='cd $cs; time ./run.py aviation 0'
-alias ppls='cd $cs; time ./run.py aviation 0 8'
-alias pplr='cd $cs; time ./run.py aviation 0 3 80 100'
-alias ppla='cd $cs; time ./run.py aviation 0 -1 0 100 1'
-alias ppla3='cd $cs; time ./run.py aviation 0 -1 0 100 3'
-alias ppla4='cd $cs; time ./run.py aviation 0 -1 0 100 3'
-alias ppla5='cd $cs; time ./run.py aviation 0 -1 0 100 5'
-alias ppla6='cd $cs; time ./run.py aviation 0 -1 0 100 6'
-alias vppl='cd $cs; vi aviation.txt'
-gppl() { grep -i "$1" $cs/aviation.txt; }
+alias ppl='cd $cst; ./run.py aviation 0'
+alias ifr='cd $cst; ./run.py aviation_ifr 0'
+alias vppl='cd $cst; vi aviation.txt'
+alias vifr='cd $cst; vi aviation_ifr.txt'
+alias vita='cd $cst; vi italian_advanced.txt'
+alias vite='cd $cst; vi italian_expressions.txt'
+alias vits='cd $cst; vi italian_slang.txt'
+alias vitv='cd $cst; vi italian_vulgar.txt'
+alias ita='cd $cst; ./run.py italian_advanced -q 0 -ps 2 -cat ""'
+alias ite='cd $cst; ./run.py italian_expressions -q 0 -ps 4 -cat ""'
+alias its='cd $cst; ./run.py italian_slang -q 0 -ps 4 -cat ""'
+alias itv='cd $cst; ./run.py italian_vulgar -q 0 -ps 4 -cat ""'
+f2c()  { calc "f2c($1)"; }
+c2f()  { calc "c2f($1)"; }
 
 alias tmcc='tmux -CC'
 alias tmcca='tmux -CC attach'
@@ -230,11 +237,8 @@ alias jn='jupyter notebook'
 alias jhtml='jupyter nbconvert --to html'
 alias sha256='shasum -a 256 -b'
 alias sha512='shasum -a 512 -b'
-alias O0='export EXTRA_CFLAGS="-O0"'
-alias O0b='export EXTRA_CFLAGS="-O0 -DDO_BAH"'
-alias O0d='export EXTRA_CFLAGS="-O0 -DLAYOUT_DEBUG"'
-alias O0db='export EXTRA_CFLAGS="-O0 -DLAYOUT_DEBUG -DDO_BAH"'
-alias O3='export EXTRA_CFLAGS=-O3'
+alias O0='export EXTRA_CFLAGS=-O0; touch Makefile'
+alias O3='export EXTRA_CFLAGS=-O3; touch Makefile'
 alias ip='idf.py'
 alias ipb='idf.py build'
 alias ipc='idf.py fullclean'
@@ -272,10 +276,8 @@ export PATH=.:/bin:/usr/local/bin:/usr/bin:/usr/local/opt/bison/bin:/home/nv/bin
 
 export NUSER=balfieri
 export CRGSERVER=crg-epsilon.nvidia.com
-export B1SERVER=dcg-sim-03b11-024
-export B2SERVER=dcg-sim-03b13-166
-export B3SERVER=dc7-sim-g11-012
-export XSERVER=sc-xterm-20.nvidia.com
+export B1SERVER=dc2-sim-c14-094
+export XSERVER=sc-xterm-24.nvidia.com
 export DT=balfieri-dt.local
 export NUSD=${NUSER}@${DT}:
 export NUSDR=${NUSER}@${DT}:./__NVIDIA/rt
@@ -301,6 +303,7 @@ export NUSXS2RS=${NUSXS2}/rt2/simplert
 export NUSXS3RS=${NUSXS3}/rt3/simplert
 export NUSXG1=${NUSER}@${XSERVER}:/home/scratch.balfieri_gpu/rt_tree1/hw/nvgpu
 export NUSXG2=${NUSER}@${XSERVER}:/home/scratch.balfieri_gpu/rt_tree2/hw/nvgpu
+export NUSXG3=${NUSER}@${XSERVER}:/home/scratch.balfieri_gpu/rt_tree3/hw/class/hopper/ttu/ttubench
 export NUSXG1IVST=${NUSXG1}/ip/gpc/sm/smh/vmod/top/ghlit1
 export NUSXG2IVST=${NUSXG2}/ip/gpc/sm/smh/vmod/top/ghlit1
 export NUSXG1YS=${NUSXG1}/syn/sm
@@ -317,23 +320,21 @@ alias skg='ssh-keygen -t rsa -b 4096'
 
 alias pw='echo $SSHPASS'
 alias skan='ssh-add ~/.ssh/id_rsa.nvidia'
-alias shna='sshpass -e ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa.nvidia ${NUSER}@crg-alpha.nvidia.com'
-alias shnd='sshpass -e ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa.nvidia ${NUSER}@crg-delta.nvidia.com'
-alias shne='sshpass -e ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa.nvidia ${NUSER}@crg-epsilon.nvidia.com'
-alias shng='sshpass -e ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa.nvidia ${NUSER}@crg-gamma.nvidia.com'
-alias shn1='sshpass -e ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa.nvidia ${NUSER}@crg-nclab-1.nvidia.com'
-alias shn2='sshpass -e ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa.nvidia ${NUSER}@crg-nclab-2.nvidia.com'
-alias shn3='sshpass -e ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa.nvidia ${NUSER}@crg-nclab-3.nvidia.com'
-alias shn4='sshpass -e ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa.nvidia ${NUSER}@crg-nclab-4.nvidia.com'
-alias shn5='sshpass -e ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa.nvidia ${NUSER}@crg-nclab-5.nvidia.com'
-alias shnb1='sshpass -e ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa.nvidia ${NUSER}@${B1SERVER}'
-alias shnb2='sshpass -e ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa.nvidia ${NUSER}@${B2SERVER}'
-alias shnb3='sshpass -e ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa.nvidia ${NUSER}@${B3SERVER}'
-alias shnx='sshpass -e ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa.nvidia ${NUSER}@${XSERVER}'
+alias shna='sshpass -e ssh -o StrictHostKeyChecking=no ${NUSER}@crg-alpha.nvidia.com'
+alias shnd='sshpass -e ssh -o StrictHostKeyChecking=no ${NUSER}@crg-delta.nvidia.com'
+alias shne='sshpass -e ssh -o StrictHostKeyChecking=no ${NUSER}@crg-epsilon.nvidia.com'
+alias shng='sshpass -e ssh -o StrictHostKeyChecking=no ${NUSER}@crg-gamma.nvidia.com'
+alias shn1='sshpass -e ssh -o StrictHostKeyChecking=no ${NUSER}@crg-nclab-1.nvidia.com'
+alias shn2='sshpass -e ssh -o StrictHostKeyChecking=no ${NUSER}@crg-nclab-2.nvidia.com'
+alias shn3='sshpass -e ssh -o StrictHostKeyChecking=no ${NUSER}@crg-nclab-3.nvidia.com'
+alias shn4='sshpass -e ssh -o StrictHostKeyChecking=no ${NUSER}@crg-nclab-4.nvidia.com'
+alias shn5='sshpass -e ssh -o StrictHostKeyChecking=no ${NUSER}@crg-nclab-5.nvidia.com'
+alias shnx='sshpass -e ssh -o StrictHostKeyChecking=no ${NUSER}@${XSERVER}'
+alias shnb1='sshpass -e ssh -o StrictHostKeyChecking=no ${NUSER}@${B1SERVER}'
 alias shdt='sshpass -e ssh ${NUSER}@${DT}'
 
-alias scn='sshpass -e scp -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa.nvidia'
-alias scdt='sshpass -e scp -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa.nvidia'
+alias scn='sshpass -e scp -o StrictHostKeyChecking=no'
+alias scdt='sshpass -e scp -o StrictHostKeyChecking=no'
 alias copyrs='tar.rs; scn `ls rs*.gz | tail -1` $NUSC5/save/b.tar.gz'
 alias copyrt='tar.rt; scn `ls rt*.gz | tail -1` $NUSCR/save/r.tar.gz'
 alias copysyn1='scn syn.tar.gz $NUSXG1IVST'
@@ -357,4 +358,5 @@ alias isync='cd $d; find . ! -path "*.icloud" \( -exec echo {} \; -a -exec touch
 
 alias dds='echo `pwd` > ~/.default_dir'
 alias dd='cd `cat ~/.default_dir`'
+alias ddp='cat ~/.default_dir'
 dd
