@@ -1,0 +1,3 @@
+git filter-branch --force --index-filter \
+  'git rm --cached --ignore-unmatch bvh/data/ttuViewer/ttuViewerDatapaths-Template.xlsm' \
+  --prune-empty --tag-name-filter cat -- --all
