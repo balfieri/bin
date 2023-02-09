@@ -202,6 +202,13 @@ alias gwm='cd $cst; grit_words.py >& grit.out'
 alias gw1='cd $cst; grit_words.py -file words1.out -one_per_line 1 >& grit1.out'
 f2c()  { calc "f2c($1)"; }
 c2f()  { calc "c2f($1)"; }
+p2k()  { calc "p2k($1)"; }
+k2p()  { calc "k2p($1)"; }
+o2g()  { calc "o2g($1)"; }
+g2o()  { calc "g2o($1)"; }
+i2m()  { calc "i2m{$1)"; }
+m2i()  { calc "m2i{$1)"; }
+bmi()  { calc "bmi(p2k($1), i2m(71))"; }
 
 alias tmcc='tmux -CC'
 alias tmcca='tmux -CC attach'
