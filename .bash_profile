@@ -198,8 +198,8 @@ alias piteo='cd $ccw; ./play_puz.py -subjects italian_expressions_other'
 alias pitpr='cd $ccw; ./play_puz.py -subjects italian_passato_remoto'
 alias itw='cd $ccw; ./doit.www'
 alias grit='cd $cst; ./grit.py' 
-alias gwm='cd $cst; grit_words.py >& grit.out'
-alias gw1='cd $cst; grit_words.py -file words1.out -one_per_line 1 >& grit1.out'
+alias gw1='cd $cst; grit_words.py -file words1.out -one_per_line 1 >& grit1.out; vi grit1.out'
+alias xw='cd $ccw; open www/index.html'
 f2c()  { calc "f2c($1)"; }
 c2f()  { calc "c2f($1)"; }
 p2k()  { calc "p2k($1)"; }

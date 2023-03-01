@@ -1,0 +1,31 @@
+#!/usr/bin/python3
+#
+import sys
+
+start_price = 230
+start_year  = 2023
+growth_rate = 1.07      # quarterly
+year_cnt    = 10
+share_cnt   = 1000      # placeholder for private number
+
+i = 1
+while i < len(sys.argv):
+    arg = sys.argv[i]
+    i += 1
+    if   arg == '-growth_rate':
+        growth_rate = int(sys.argv[i])
+        i += 1
+    elif arg == '-share_cnt':
+        share_cnt = int(sys.argv[i])
+        i += 1
+    else:
+        die( f'unknown option: {arg}' )
+
+gain = 1.0
+
+for y in range(year_cnt+1):
+    price = int(start_price * gain)
+    value = share_cnt * price
+    valueM = value / 1000000.0
+    print( f'{y:2d} {gain:7.2f}  {price:5d}  {valueM:7.2f}' )
+    for q in range(4): gain *= growth_rate
