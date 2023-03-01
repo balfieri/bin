@@ -24,8 +24,9 @@ while i < len(sys.argv):
 gain = 1.0
 
 for y in range(year_cnt+1):
+    year  = start_year + y
     price = int(start_price * gain)
     value = share_cnt * price
     valueM = value / 1000000.0
-    print( f'{y:2d} {gain:7.2f}  {price:5d}  {valueM:7.2f}' )
+    print( f'{year:4d} {gain:7.2f}  {price:5d}  {valueM:7.2f}' )
     for q in range(4): gain *= growth_rate
