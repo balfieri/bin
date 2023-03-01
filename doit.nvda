@@ -13,7 +13,7 @@ while i < len(sys.argv):
     arg = sys.argv[i]
     i += 1
     if   arg == '-growth_rate':
-        growth_rate = int(sys.argv[i])
+        growth_rate = float(sys.argv[i])
         i += 1
     elif arg == '-share_cnt':
         share_cnt = int(sys.argv[i])
