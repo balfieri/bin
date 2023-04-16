@@ -18,7 +18,9 @@ export ccw=$c/crossword
 export cw=$c/wordle
 export at=$a/Trips
 export ca=$c/aws
-export cc=$c/cordic
+export cc=$c/cnerf
+export ci=$c/instant-ngp
+export ct=$c/tiny-cuda-nn
 export ce=$c/eleksmaker
 export cg=$c/gfx3d
 export ch=$c/HomeDir
@@ -32,7 +34,6 @@ export ch=$c/HomeDir
 export cq=$c/qam
 export cr=$c/crashes
 export crr=$c/crashes/raw
-export ct=$c/astc
 export cts=$ct/Source
 export cv=$c/vdbedit
 export vp=$c/vpy
@@ -146,7 +147,7 @@ alias grs='git remote show origin'
 alias grhm='git fetch origin; git reset --hard origin/master'
 alias gtrack='find . -size +5M -print | while read f; do git lfs track $f; git add $f; done'
 export AWS_DEFAULT_PROFILE=default
-export AWS_MASTER_INSTANCE=i-077e2d60f68bbedfd
+export AWS_MASTER_INSTANCE=i-0128179c44436f90a
 alias sts='aws sts'
 alias ec2='aws ec2'
 alias efs='aws efs'
@@ -180,7 +181,7 @@ alias iteo='cd $cst; ./run.py italian_expressions_other -q 0 -ps 4 -cat ""'
 alias itv='cd $cst; ./run.py italian_vulgar -q 0 -ps 4 -cat ""'
 alias itpr='cd $cst; ./run.py italian_passato_remoto -q 0 -ps 4 -cat ""'
 alias itev='cd $cst; ./run.py italian_expressions,italian_vulgar -q 0 -ps 4 -cat ""'
-alias it='cd $cst;  ./run.py italian_basic,italian_advanced,italian_expressions_common,italian_expressions_other,american_expressions_get,american_expressions_favorite,italian_vulgar,italian_passato_remoto -q 0 -ps 3 -cat ""'
+alias it='cd $cst;  ./run.py italian_basic,italian_advanced,italian_expressions_common,italian_expressions_other,american_expressions_get,american_expressions_favorite,italian_vulgar,italian_passato_remoto -q 0 -ps 1 -cat ""'
 alias fditb='cd $cst; ./find_dups.py italian_basic'
 alias fdita='cd $cst; ./find_dups.py italian_advanced'
 alias fditec='cd $cst; ./find_dups.py italian_expressions_common'
@@ -202,13 +203,19 @@ alias gw1='cd $cst; grit_words.py -file words1.out -one_per_line 1 >& grit1.out;
 alias xw='cd $ccw; open www/index.html'
 f2c()  { calc "f2c($1)"; }
 c2f()  { calc "c2f($1)"; }
+k2m()  { calc "k2m($1)"; }
+m2k()  { calc "m2k($1)"; }
 p2k()  { calc "p2k($1)"; }
 k2p()  { calc "k2p($1)"; }
 o2g()  { calc "o2g($1)"; }
 g2o()  { calc "g2o($1)"; }
-i2m()  { calc "i2m{$1)"; }
-m2i()  { calc "m2i{$1)"; }
+i2m()  { calc "i2m($1)"; }
+m2i()  { calc "m2i($1)"; }
 bmi()  { calc "bmi(p2k($1), i2m(71))"; }
+nv2mc() { calc "nv2mc($1)"; }
+mc2nv() { calc "mc2nv($1)"; }
+cmileage() { calc "($1-120896)*365/(dayssince('24 feb 2023'))"; }
+vmileage() { calc "($1-3)*365/(dayssince('18 feb 2023'))"; }
 
 alias tmcc='tmux -CC'
 alias tmcca='tmux -CC attach'

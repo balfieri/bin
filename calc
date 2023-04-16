@@ -1,12 +1,15 @@
 #!/usr/bin/perl -w
 #
 use Math::Trig;
+use Date::Parse;
 
 sub log2 { log( $_[0] ) / log( 2 ) }
 
 sub f2c  { ($_[0] - 32.0) * 5.0/9.0 }
 sub c2f  { $_[0] * 9.0/5.0 + 32     }
 
+sub k2m  { $_[0] * 0.6213712 }
+sub m2k  { $_[0] / 0.6213712 }
 sub p2k  { $_[0] * 0.4535924 }
 sub k2p  { $_[0] / 0.4535924 }
 sub o2g  { p2k($_[0]/16.0) * 1000.0 }
@@ -15,7 +18,13 @@ sub i2m  { $_[0] * 0.0254 }
 sub m2i  { $_[0] / 0.0254 }
 sub bmi  { $_[0] / ($_[1]*$_[1]) }
 
+sub nv2mc { $_[0]/240.63*594.356 }
+sub mc2nv { $_[0]/594.356*240.63 }
+
 sub sum  { my $s = 0.0; for(@_) { $s += $_; } return $s; }
+
+sub d2s  { str2time( $_[0] ) }
+sub dayssince { (d2s(`date`) - d2s($_[0])) / (3600*24) }
 
 my $expr = join( " ", @ARGV );
 my $val  = eval( $expr );
