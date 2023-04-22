@@ -309,7 +309,7 @@ alias dn2='denon vol_down2'
 alias atv='atvremote -n "Family Room" --mrp-credentials `cat ~/mrp_fr_creds` cli'
 
 export AWS_HOME="${c}/aws"
-export OPENAI_API_KEY="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"
+export OPENAI_API_KEY=`cat ~/.openai_key.txt`
 export ASSIMP_HOME="${c}/assimp"
 export MAGICK_HOME="${HOME}/ImageMagick-7.0.7"
 export MAGICK_THREAD_LIMIT=12
