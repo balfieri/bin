@@ -1,0 +1,12 @@
+#!/usr/bin/python3
+#
+import openai
+import os
+import pprint
+
+openai.api_key = os.getenv( 'OPENAI_API_KEY' )
+
+model_list = openai.Model.list()['data']
+model_ids = [x['id'] for x in model_list]
+model_ids.sort()
+pprint.pprint(model_ids)

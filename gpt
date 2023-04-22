@@ -1,0 +1,27 @@
+#!/usr/bin/python3
+#
+import openai
+import os
+
+openai.api_key = os.getenv( 'OPENAI_API_KEY' )
+model_engine   = 'gpt-3.5-turbo'
+
+messages=[ {'role': 'system', 'content': 'Ask me anything.'} ]
+while True:
+    prompt = input( 'you: ' )
+    messages.append( {'role': 'user', 'content': prompt} )
+
+    response = openai.ChatCompletion.create(
+        model=model_engine,
+        messages=messages,
+        max_tokens=1024,
+        n=1,
+        temperature=0.5,
+        top_p=1,
+        frequency_penalty=0.0,
+        presence_penalty=0.6,
+    )
+    resp = response['choices'][0]['message']['content']
+    messages.append( {'role': 'assistant', 'content': resp} )
+    print( f'gpt: {resp}' )
+    print()
