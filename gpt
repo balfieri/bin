@@ -1,14 +1,31 @@
 #!/usr/bin/python3
 #
-import openai
+# coding=utf-8
+#
+
 import os
+import sys
+import openai
+import readchar
 
 openai.api_key = os.getenv( 'OPENAI_API_KEY' )
 model_engine   = 'gpt-3.5-turbo'
 
 messages=[ {'role': 'system', 'content': 'Ask me anything.'} ]
 while True:
-    prompt = input( 'you: ' )
+    if True:
+        # this has a problem with echoing utf-8 characters incorrectly as they are typed using press-and-hold:
+        prompt = input( 'you: ' )
+    else:
+        # this has a different problem:
+        print( 'you: ', end='', flush=True )
+        prompt = ''
+        while True:
+            ch = readchar.readchar();
+            print( ch, flush=True )
+            if ch == '\n': break
+            prompt += ch
+
     messages.append( {'role': 'user', 'content': prompt} )
 
     response = openai.ChatCompletion.create(
