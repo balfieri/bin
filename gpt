@@ -2,34 +2,61 @@
 #
 # coding=utf-8
 #
-
 import os
 import sys
 import openai
-import readchar
+
+def die( msg ):
+    print( f'ERROR: {msg}' )
+    sys.exit( 1 )
 
 openai.api_key = os.getenv( 'OPENAI_API_KEY' )
-model_engine   = 'gpt-3.5-turbo'
+model          = 'gpt-3.5-turbo'
+context        = ''
+is_multi_line  = False
+
+i = 1
+while i < len(sys.argv):
+    arg = sys.argv[i]
+    i += 1
+    if   arg == '-m':
+        model = sys.argv[i]
+        i += 1
+    elif arg == '-c':
+        context = sys.argv[i]
+        i += 1
+    elif arg == '-ml':
+        is_multi_line = int( sys.argv[i] )
+        i += 1
+    else:
+        die( f'unknown option: {arg}' )
 
 messages=[ {'role': 'system', 'content': 'Ask me anything.'} ]
-while True:
-    if True:
-        # this has a problem with echoing utf-8 characters incorrectly as they are typed using press-and-hold:
-        prompt = input( 'you: ' )
-    else:
-        # this has a different problem:
-        print( 'you: ', end='', flush=True )
-        prompt = ''
-        while True:
-            ch = readchar.readchar();
-            print( ch, flush=True )
-            if ch == '\n': break
-            prompt += ch
+if context == 'translations':
+     context = 'Here are some phrases in either English or Italian. For each phrase, please output a pair of lines. The first line always shows the English translation. The second line always shows the Italian translation. Then add a blank line after those two lines. That should be the order regardless of whether the original phrase is in English or Italian. Finally, please do not capitalize words unnecessarily.' 
+     is_multi_line = True
+elif context != '':
+     die( f'unknown context: {context}' )
 
+def prompt_read( prefix, is_multi_line ):
+    prompt = input( prefix )
+    if not is_multi_line: return prompt
+    while True:
+         extra = input( '' )
+         if extra == '': return prompt
+         prompt += '\n' + extra
+
+while True:
+    prompt = prompt_read( '', is_multi_line )
+
+    if context != '':
+        prompt = context + '\n' + prompt
+        context = ''
     messages.append( {'role': 'user', 'content': prompt} )
+    print( '-----------------------------------\n' )
 
     response = openai.ChatCompletion.create(
-        model=model_engine,
+        model=model,
         messages=messages,
         max_tokens=1024,
         n=1,
@@ -40,5 +67,5 @@ while True:
     )
     resp = response['choices'][0]['message']['content']
     messages.append( {'role': 'assistant', 'content': resp} )
-    print( f'gpt: {resp}' )
-    print()
+    print( f'{resp}' )
+    print( '-----------------------------------\n' )
