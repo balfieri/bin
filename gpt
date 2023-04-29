@@ -50,14 +50,17 @@ messages=[ {'role': 'system', 'content': 'Ask me anything.'} ]
 if context == 'translations':
     context = 'Here are some phrases in either English or Italian. For each phrase, please output a pair of lines. The first line always shows the English translation. The second line always shows the Italian translation. Then add a blank line after those two lines. That should be the order regardless of whether the original phrase is in English or Italian. If you\'d like to list a couple English/Italian translations, that\'s fine, just separate them with semicolons; Finally, please do not capitalize words unless they are always capitalized. So to summarize, for each phrase your output should be:\n<English translations separate by semicolons>\n<Italian translations separated by semicolons\n\n' 
     is_multi_line = True
+
 elif context == 'transcription':
     audio_file_path = cmd( f'ls -t $HOME/Library/Application*Support/com.apple.voicememos/Recordings/*.m4a | head -1', False )
     audio_file_path = audio_file_path.rstrip()
-    print( f'Using: {audio_file_path}' )
+    print( f'Having Whisper transcribe: {audio_file_path}' )
     wmodel = whisper.load_model( "base" )
     result = wmodel.transcribe( audio_file_path )
-    print( result["text"] )
-    sys.exit( 0 )
+    transcribed_text = result['text'] 
+    print( f'\nTranscribed text:\n{transcribed_text}' )
+    print( f'\nHaving ChatGPT correct it...' )
+    context = f'Correggi: {transcribed_text}'
 
 elif context != '':
      die( f'unknown context: {context}' )
