@@ -1,19 +1,34 @@
-#!/usr/bin/python3
+#!/usr/local/bin/python3.10
 #
 # coding=utf-8
 #
 import os
 import sys
+import subprocess
+
 import openai
+import whisper
+
+cmd_en = True
 
 def die( msg ):
     print( f'ERROR: {msg}' )
     sys.exit( 1 )
 
-openai.api_key = os.getenv( 'OPENAI_API_KEY' )
-model          = 'gpt-3.5-turbo'
-context        = ''
-is_multi_line  = False
+def cmd( c, echo=True, echo_stdout=False, can_die=True ):  
+    if echo: print( c )
+    if cmd_en:
+        info = subprocess.run( c, shell=True, text=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT )
+        if echo_stdout: print( info.stdout )
+        if can_die and info.returncode != 0: die( f'command failed: {c}' )
+        return info.stdout
+    else:
+        return ''
+
+openai.api_key   = os.getenv( 'OPENAI_API_KEY' )
+model            = 'gpt-3.5-turbo'
+context          = ''
+is_multi_line    = False
 
 i = 1
 while i < len(sys.argv):
@@ -25,16 +40,25 @@ while i < len(sys.argv):
     elif arg == '-c':
         context = sys.argv[i]
         i += 1
-    elif arg == '-ml':
-        is_multi_line = int( sys.argv[i] )
+    elif arg == '-ia': 
+        is_italian_audio = int( sys.argv[i] )
         i += 1
     else:
         die( f'unknown option: {arg}' )
 
 messages=[ {'role': 'system', 'content': 'Ask me anything.'} ]
 if context == 'translations':
-     context = 'Here are some phrases in either English or Italian. For each phrase, please output a pair of lines. The first line always shows the English translation. The second line always shows the Italian translation. Then add a blank line after those two lines. That should be the order regardless of whether the original phrase is in English or Italian. Finally, please do not capitalize words unnecessarily.' 
-     is_multi_line = True
+    context = 'Here are some phrases in either English or Italian. For each phrase, please output a pair of lines. The first line always shows the English translation. The second line always shows the Italian translation. Then add a blank line after those two lines. That should be the order regardless of whether the original phrase is in English or Italian. If you\'d like to list a couple English/Italian translations, that\'s fine, just separate them with semicolons; Finally, please do not capitalize words unless they are always capitalized. So to summarize, for each phrase your output should be:\n<English translations separate by semicolons>\n<Italian translations separated by semicolons\n\n' 
+    is_multi_line = True
+elif context == 'transcription':
+    audio_file_path = cmd( f'ls -t $HOME/Library/Application*Support/com.apple.voicememos/Recordings/*.m4a | head -1', False )
+    audio_file_path = audio_file_path.rstrip()
+    print( f'Using: {audio_file_path}' )
+    wmodel = whisper.load_model( "base" )
+    result = wmodel.transcribe( audio_file_path )
+    print( result["text"] )
+    sys.exit( 0 )
+
 elif context != '':
      die( f'unknown context: {context}' )
 

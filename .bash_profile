@@ -129,6 +129,8 @@ alias gdcr='git fetch; git diff --cached origin/master'
 alias gf='git fetch'
 alias gm='git merge'
 alias gprm='git filter-repo --invert-paths --path'
+alias gptt='gpt -c translations'
+alias gptia='gpt -c transcription'
 alias gst='git stash push'                 
 alias gstp='git stash pop'
 alias gstl='git stash list'          
@@ -147,6 +149,8 @@ alias grhm='git fetch origin; git reset --hard origin/master'
 alias gtrack='find . -size +5M -print | while read f; do git lfs track $f; git add $f; done'
 export AWS_DEFAULT_PROFILE=default
 export AWS_MASTER_INSTANCE=i-0128179c44436f90a
+alias kr='defaults write -g ApplePressAndHoldEnabled -bool false'
+alias kh='defaults write -g ApplePressAndHoldEnabled -bool true'
 alias sts='aws sts'
 alias ec2='aws ec2'
 alias efs='aws efs'
@@ -213,7 +217,9 @@ m2i()  { calc "m2i($1)"; }
 bmi()  { calc "bmi(p2k($1), i2m(71))"; }
 nv2mc() { calc "nv2mc($1)"; }
 mc2nv() { calc "mc2nv($1)"; }
-cmileage() { calc "($1-120896)*365/(dayssince('24 feb 2023'))"; }
+cmileage() { calc "($1-60340)*365/(dayssince('07 mar 2023'))"; }
+fmileage() { calc "($1-38413)*365/(dayssince('07 mar 2023'))"; }
+pmileage() { calc "($1-120896)*365/(dayssince('24 feb 2023'))"; }
 vmileage() { calc "($1-3)*365/(dayssince('18 feb 2023'))"; }
 
 alias tmcc='tmux -CC'
