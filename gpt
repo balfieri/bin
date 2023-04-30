@@ -30,6 +30,9 @@ model            = 'gpt-3.5-turbo'
 context          = ''
 is_multi_line    = False
 recording_dead_time = 3.0
+english_voice    = 'Samantha'
+italian_voice    = 'Alice'
+is_italian_convo = False
 
 i = 1
 while i < len(sys.argv):
@@ -43,6 +46,15 @@ while i < len(sys.argv):
         i += 1
     elif arg == '-recording_dead_time':
         recording_dead_time = float( sys.argv[i] )
+        i += 1
+    elif arg == '-english_voice':
+        english_voice = sys.argv[i]
+        i += 1
+    elif arg == '-italian_voice':
+        italian_voice = sys.argv[i]
+        i += 1
+    elif arg == '-is_italian_convo':
+        is_italian_convo = int( sys.argv[i] )
         i += 1
     else:
         die( f'unknown option: {arg}' )
@@ -59,15 +71,16 @@ def prompt_read( prefix, is_multi_line ):
 
 def record_audio():
     while True:
-        input( f'Hit return when ready to record: ' )
+        if is_italian_convo: input( f'Hit return when ready to record: ' )
         print( f'Recording will stop after {recording_dead_time} seconds of silence' )
         audio_file_path = 'gpt_audio.wav'
         cmd( f'rm -f {audio_file_path}', False )
         cmd( f'rec {audio_file_path} silence 1 0.1 3% 1 {recording_dead_time} 3%', False, False )
-        print( f'Transcribing...' )
+        print( f'Transcribing text...\n' )
         result = wmodel.transcribe( audio_file_path, fp16=False )
         transcribed_text = result['text'] 
-        print( f'\nTranscribed text:\n{transcribed_text}\n' )
+        print( f'{transcribed_text}\n' )
+        if is_italian_convo: return transcribed_text
         while True:
             resp = input( f'Type r=re-record c=correct s=submit a=abandon: ' )
             if resp == 'r' or resp == 'c' or resp == 's' or resp == 'a': break
@@ -75,6 +88,11 @@ def record_audio():
     if resp == 'c': transcribed_text = f'correggi questo testo: {transcribed_text}'
     if resp == 'a': transcribed_text = ''
     return transcribed_text
+
+def speak_text( text, voice ):
+    with open( 'gpt_text.txt', 'w' ) as file:
+        file.write( text )
+    cmd( f'say -f gpt_text.txt -v {voice}', False, False )
 
 skip_first_prompt = False
 messages=[ {'role': 'system', 'content': 'Ask me anything.'} ]
@@ -98,14 +116,21 @@ while True:
         prompt = context
         context = ''
         skip_first_prompt = False
+    elif is_italian_convo:
+        prompt = record_audio()
+        if prompt == '': continue
     else:
         prompt = prompt_read( '', is_multi_line )
         if context != '':
             prompt = context + '\n' + prompt
             context = ''
-        elif prompt == '@':
+        elif prompt == '!v':
             prompt = record_audio()
-            if prompt == '': continue
+            if prompt == '': continue # abandoned
+        elif prompt == '!e' or prompt == '!i':
+            voice = english_voice if prompt == '!e' else italian_voice
+            speak_text( messages[-1]['content'], voice )
+            continue
 
     messages.append( {'role': 'user', 'content': prompt} )
     print( '-----------------------------------\n' )
@@ -124,3 +149,4 @@ while True:
     messages.append( {'role': 'assistant', 'content': resp} )
     print( f'{resp}' )
     print( '-----------------------------------\n' )
+    if is_italian_convo: speak_text( messages[-1]['content'], italian_voice )
