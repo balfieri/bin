@@ -53,9 +53,18 @@ if context == 'translations':
     is_multi_line = True
 
 elif context == 'transcription':
-    audio_file_path = cmd( f'ls -t $HOME/Library/Application*Support/com.apple.voicememos/Recordings/*.m4a | head -1', False )
-    audio_file_path = audio_file_path.rstrip()
-    print( f'Transcribing latest Voice Memos file:\n{audio_file_path}' )
+    if True:
+        input( f'Hit newline when ready to record: ' )
+        print( f'Recording will stop after 5 seconds of silence' )
+        audio_file_path = 'gpt_audio.wav'
+        cmd( f'rm -f {audio_file_path}', False )
+        cmd( f'rec {audio_file_path} silence 1 0.1 3% 1 5.0 3%', False, False )
+        print( f'Transcribing...' )
+    else:
+        audio_file_path = cmd( f'ls -t $HOME/Library/Application*Support/com.apple.voicememos/Recordings/*.m4a | head -1', False )
+        audio_file_path = audio_file_path.rstrip()
+        print( f'Transcribing latest Voice Memos file:\n{audio_file_path}' )
+
     wmodel = whisper.load_model( "base" )
     result = wmodel.transcribe( audio_file_path, fp16=False )
     transcribed_text = result['text'] 
