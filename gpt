@@ -59,7 +59,7 @@ def prompt_read( prefix, is_multi_line ):
 
 def record_audio():
     while True:
-        input( f'Hit newline when ready to record: ' )
+        input( f'Hit return when ready to record: ' )
         print( f'Recording will stop after {recording_dead_time} seconds of silence' )
         audio_file_path = 'gpt_audio.wav'
         cmd( f'rm -f {audio_file_path}', False )
