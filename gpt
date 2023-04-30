@@ -29,6 +29,7 @@ openai.api_key   = os.getenv( 'OPENAI_API_KEY' )
 model            = 'gpt-3.5-turbo'
 context          = ''
 is_multi_line    = False
+recording_dead_time = 3.0
 
 i = 1
 while i < len(sys.argv):
@@ -40,41 +41,13 @@ while i < len(sys.argv):
     elif arg == '-c':
         context = sys.argv[i]
         i += 1
-    elif arg == '-ia': 
-        is_italian_audio = int( sys.argv[i] )
+    elif arg == '-recording_dead_time':
+        recording_dead_time = float( sys.argv[i] )
         i += 1
     else:
         die( f'unknown option: {arg}' )
 
-skip_first_prompt = False
-messages=[ {'role': 'system', 'content': 'Ask me anything.'} ]
-if context == 'translations':
-    context = 'Here are some phrases in either English or Italian. For each phrase, please output a pair of lines. The first line always shows the English translation. The second line always shows the Italian translation. Then add a blank line after those two lines. That should be the order regardless of whether the original phrase is in English or Italian. If you\'d like to list a couple English/Italian translations, that\'s fine, just separate them with semicolons; Finally, please do not capitalize words unless they are always capitalized. So to summarize, for each phrase your output should be:\n<English translations separate by semicolons>\n<Italian translations separated by semicolons\n\n' 
-    is_multi_line = True
-
-elif context == 'transcription':
-    if True:
-        input( f'Hit newline when ready to record: ' )
-        print( f'Recording will stop after 5 seconds of silence' )
-        audio_file_path = 'gpt_audio.wav'
-        cmd( f'rm -f {audio_file_path}', False )
-        cmd( f'rec {audio_file_path} silence 1 0.1 3% 1 5.0 3%', False, False )
-        print( f'Transcribing...' )
-    else:
-        audio_file_path = cmd( f'ls -t $HOME/Library/Application*Support/com.apple.voicememos/Recordings/*.m4a | head -1', False )
-        audio_file_path = audio_file_path.rstrip()
-        print( f'Transcribing latest Voice Memos file:\n{audio_file_path}' )
-
-    wmodel = whisper.load_model( "base" )
-    result = wmodel.transcribe( audio_file_path, fp16=False )
-    transcribed_text = result['text'] 
-    print( f'\nTranscribed text:\n{transcribed_text}' )
-    print( f'\nChatGPT corrected text: (wait for it)' )
-    context = f'Correggi: {transcribed_text}'
-    skip_first_prompt = True
-
-elif context != '':
-     die( f'unknown context: {context}' )
+wmodel = whisper.load_model( "base" )
 
 def prompt_read( prefix, is_multi_line ):
     prompt = input( prefix )
@@ -83,6 +56,42 @@ def prompt_read( prefix, is_multi_line ):
          extra = input( '' )
          if extra == '': return prompt
          prompt += '\n' + extra
+
+def record_audio():
+    while True:
+        input( f'Hit newline when ready to record: ' )
+        print( f'Recording will stop after {recording_dead_time} seconds of silence' )
+        audio_file_path = 'gpt_audio.wav'
+        cmd( f'rm -f {audio_file_path}', False )
+        cmd( f'rec {audio_file_path} silence 1 0.1 3% 1 {recording_dead_time} 3%', False, False )
+        print( f'Transcribing...' )
+        result = wmodel.transcribe( audio_file_path, fp16=False )
+        transcribed_text = result['text'] 
+        print( f'\nTranscribed text:\n{transcribed_text}\n' )
+        while True:
+            resp = input( f'Type r=re-record c=correct s=submit a=abandon: ' )
+            if resp == 'r' or resp == 'c' or resp == 's' or resp == 'a': break
+        if resp != 'r': break
+    if resp == 'c': transcribed_text = f'correggi questo testo: {transcribed_text}'
+    if resp == 'a': transcribed_text = ''
+    return transcribed_text
+
+skip_first_prompt = False
+messages=[ {'role': 'system', 'content': 'Ask me anything.'} ]
+if context == 'translations':
+    context = 'Here are some phrases in either English or Italian. For each phrase, please output a pair of lines. The first line always shows the English translation. The second line always shows the Italian translation. Then add a blank line after those two lines. That should be the order regardless of whether the original phrase is in English or Italian. If you\'d like to list a couple English/Italian translations, that\'s fine, just separate them with semicolons; Finally, please do not capitalize words unless they are always capitalized. So to summarize, for each phrase your output should be:\n<English translations separate by semicolons>\n<Italian translations separated by semicolons\n\n' 
+    is_multi_line = True
+
+elif context == 'transcription':
+    transcribed_text = record_audio()
+    if transcribed_text == '': 
+        context = ''
+    else:
+        context = transcribed_text
+    skip_first_prompt = True
+
+elif context != '':
+     die( f'unknown context: {context}' )
 
 while True:
     if skip_first_prompt:
@@ -94,6 +103,9 @@ while True:
         if context != '':
             prompt = context + '\n' + prompt
             context = ''
+        elif prompt == '@':
+            prompt = record_audio()
+            if prompt == '': continue
 
     messages.append( {'role': 'user', 'content': prompt} )
     print( '-----------------------------------\n' )
