@@ -32,6 +32,7 @@ is_multi_line    = False
 recording_dead_time = 3.0
 english_voice    = 'Samantha'
 italian_voice    = 'Alice'
+voice_rate       = 190
 is_italian_convo = False
 
 i = 1
@@ -56,6 +57,9 @@ while i < len(sys.argv):
     elif arg == '-is_italian_convo':
         is_italian_convo = int( sys.argv[i] )
         i += 1
+    elif arg == '-r' or arg == '-voice_rate':
+        voice_rate = int( sys.argv[i] )
+        i += 1
     else:
         die( f'unknown option: {arg}' )
 
@@ -71,7 +75,7 @@ def prompt_read( prefix, is_multi_line ):
 
 def record_audio( always_submit ):
     while True:
-        if is_italian_convo: input( f'Hit return when ready to record: ' )
+        #if is_italian_convo: input( f'Hit return when ready to record: ' )
         print( f'Recording will stop after {recording_dead_time} seconds of silence' )
         audio_file_path = 'gpt_audio.wav'
         cmd( f'rm -f {audio_file_path}', False )
@@ -92,7 +96,7 @@ def record_audio( always_submit ):
 def speak_text( text, voice ):
     with open( 'gpt_text.txt', 'w' ) as file:
         file.write( text )
-    cmd( f'say -f gpt_text.txt -v {voice}', False, False )
+    cmd( f'say -f gpt_text.txt -v {voice} -r {voice_rate}', False, False )
 
 messages=[ {'role': 'system', 'content': 'Ask me anything.'} ]
 if context == 'translations':
@@ -136,4 +140,5 @@ while True:
     messages.append( {'role': 'assistant', 'content': resp} )
     print( f'{resp}' )
     print( '-----------------------------------\n' )
-    if is_italian_convo: speak_text( messages[-1]['content'], italian_voice )
+    resp_text = messages[-1]['content']
+    if is_italian_convo and len(resp_text) < 500: speak_text( resp_text, italian_voice )

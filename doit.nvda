@@ -2,11 +2,12 @@
 #
 import sys
 
-start_price = 230
-start_year  = 2023
-growth_rate = 1.07      # quarterly
-year_cnt    = 10
-share_cnt   = 1000      # placeholder for private number
+start_price  = 230
+start_mktcap = 678.88 * 230/274.85
+start_year   = 2023
+growth_rate  = 1.07      # quarterly
+year_cnt     = 10
+share_cnt    = 1000      # placeholder for private number
 
 i = 1
 while i < len(sys.argv):
@@ -26,7 +27,8 @@ gain = 1.0
 for y in range(year_cnt+1):
     year  = start_year + y
     price = int(start_price * gain)
+    mktcap = int(start_mktcap * gain)
     value = share_cnt * price
     valueM = value / 1000000.0
-    print( f'{year:4d} {gain:7.2f}  {price:5d}  {valueM:7.2f}' )
+    print( f'{year:4d} {gain:7.2f}  {price:5d}  {mktcap:5d}  {valueM:7.2f}' )
     for q in range(4): gain *= growth_rate
