@@ -1,3 +1,7 @@
+# /Volumes/SLOWDATA does not exist any more, so will
+# need to use a different temporary external drive because
+# this data is too large for my current Mac's SSD.
+#
 cd ~
 export date=`date +%Y_%m_%d`
 export tar=/Volumes/SLOWDATA/bobbo.iTunes.${date}.tar.gz

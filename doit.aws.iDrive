@@ -1,6 +1,9 @@
+# /Volumes/SLOWDATA doesn't exist any more, so the .tar.gz file is kept under ~
+#
 cd $d
 export date=`date +%Y_%m_%d`
-export tar=/Volumes/SLOWDATA/bobbo.iDrive.${date}.tar.gz
+#export tar=/Volumes/SLOWDATA/bobbo.iDrive.${date}.tar.gz
+export tar=~/bobbo.iDrive.${date}.tar.gz
 tar cvfz ${tar} .
 gpg --encrypt --recipient bob_alfieri@yahoo.com ${tar}
 aws s3 cp ${tar}.gpg s3://alfieri/

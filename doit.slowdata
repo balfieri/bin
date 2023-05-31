@@ -1,4 +1,8 @@
 #!/bin/sh
+#
+# Note: /Volumes/SLOWDATA is no longer available, so will need to find
+# another hard drive, or not use this script anymore.
+#
 PATH=/usr/local/bin:/usr/local/sbin:~/bin:/usr/bin:/bin:/usr/sbin:/sbin
 
 # backup important things to /Volumes/SLOWDATA (external hard drive)
