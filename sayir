@@ -1,0 +1,32 @@
+#!/usr/bin/python3
+#
+import sys
+import subprocess
+
+def die( msg ):
+    print( f'ERROR: {msg}' )
+    sys.exit( 1 )
+
+def cmd( c, echo=True, echo_stdout=False, can_die=True ):  
+    if echo: print( c )
+    if cmd_en:
+        info = subprocess.run( c, shell=True, text=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT )
+        if echo_stdout: print( info.stdout )
+        if can_die and info.returncode != 0: die( f'command failed: {c}' )
+        return info.stdout
+    else:
+        return ''
+
+i = 1
+cnt = int(sys.argv[i])
+i += 1
+s = ''
+while i < len(sys.argv):
+    if s != '': s += ' '
+    s += sys.argv[i]
+    i += 1
+
+cmd_en = True
+
+for i in range(cnt):
+    cmd( f'say -v Alice -r 140 {s}' )
