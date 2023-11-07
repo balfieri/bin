@@ -10,7 +10,7 @@ year_cnt     = 10
 share_cnt    = 1000      # placeholder for private number
 
 use_canned_prices = True
-canned_prices = [300, 400, 500, 600, 650, 700, 800, 900, 1000, 1500, 2000, 2500, 3000, 3500, 4000]
+canned_prices = [300, 400, 500, 600, 650, 700, 800, 900, 1000, 1500, 2000, 2500, 3000, 3500, 4000, 4500, 5000]
 
 def die( msg ):
     print( f'ERROR: {msg}' )

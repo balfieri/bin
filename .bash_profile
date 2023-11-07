@@ -35,6 +35,8 @@ export cr=$c/crashes
 export crr=$c/crashes/raw
 export cts=$ct/Source
 export cv=$c/vai
+export cva=$c/vai/aid
+export cvn=$c/vai/nn
 export cvv=$c/vai/v
 export cvp=$c/vpy
 export cp=$c/Pam
@@ -229,6 +231,8 @@ o2g()  { calc "o2g($1)"; }
 g2o()  { calc "g2o($1)"; }
 i2m()  { calc "i2m($1)"; }
 m2i()  { calc "m2i($1)"; }
+f2m()  { calc "f2m($1)"; }
+m2f()  { calc "m2f($1)"; }
 bmi()  { calc "bmi(p2k($1), i2m(71))"; }
 nv2mc() { calc "nv2mc($1)"; }
 mc2nv() { calc "mc2nv($1)"; }
