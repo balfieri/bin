@@ -345,7 +345,11 @@ export DYLD_LIBRARY_PATH=${DYLD_LIBRARY_PATH}:$ELMER_HOME/lib
 #export PYTHONPATH="/usr/local/lib/python3.7:$c/devsim1.4.3/lib"
 export IDF_PATH=~/espidf
 
-export PATH=.:/bin:/usr/local/bin:/usr/bin:/usr/local/opt/bison/bin:/home/nv/bin:/sbin:$b:${MAGICK_HOME}/bin:/Library/TeX/texbin/:${AWS_HOME}:${ASSIMP_HOME}/bin:${c}/esp32elf/bin:$IDF_PATH/tools:$c/astc/Source:/usr/sbin:${ELMER_HOME}/bin:${HOME}/Library/Python/3.7/bin
+if [ -f '/c/anaconda3/Scripts/conda.exe' ]; then
+    export PATH=.:/c/anaconda3:/c/anaconda3/Library/mingw-w64/bin:/c/anaconda3/Library/usr/bin:/c/anaconda3/Library/bin:/c/anaconda3/Scripts:/c/anaconda3/bin:$b:${PATH_ORIG}
+else
+    export PATH=.:/bin:/usr/local/bin:/usr/bin:/usr/local/opt/bison/bin:/home/nv/bin:/sbin:$b:${MAGICK_HOME}/bin:/Library/TeX/texbin/:${AWS_HOME}:${ASSIMP_HOME}/bin:${c}/esp32elf/bin:$IDF_PATH/tools:$c/astc/Source:/usr/sbin:${ELMER_HOME}/bin:${HOME}/Library/Python/3.7/bin
+fi
 
 export NUSER=balfieri
 export CRGSERVER=crg-epsilon.nvidia.com
