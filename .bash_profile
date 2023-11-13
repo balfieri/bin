@@ -209,6 +209,7 @@ alias fditaf='cd $cst; ./find_dups.py american_expressions_favorite'
 alias fditv='cd $cst; ./find_dups.py italian_vulgar'
 alias fditpr='cd $cst; ./find_dups.py italian_passato_remoto'
 alias fdit='cd $cst; ./find_dups.py italian_basic,italian_advanced,italian_expressions_common,italian_expressions_other,american_expressions_get,american_expressions_favorite,italian_vulgar,italian_passato_remoto,italian_tongue_twisters'
+alias fditq='cd $cst; ./find_dups.py italian_basic,italian_advanced,italian_expressions_common,italian_expressions_other,american_expressions_get,american_expressions_favorite,italian_vulgar,italian_passato_remoto,italian_tongue_twisters -q 1'
 alias pitb='cd $ccw; ./play_puz.py -subjects italian_basic'
 alias pita='cd $ccw; ./play_puz.py -subjects italian_advanced'
 alias pitar='cd $ccw; ./play_puz.py -subjects italian_advanced -start_pct 85'
@@ -236,6 +237,8 @@ m2f()  { calc "m2f($1)"; }
 bmi()  { calc "bmi(p2k($1), i2m(71))"; }
 nv2mc() { calc "nv2mc($1)"; }
 mc2nv() { calc "mc2nv($1)"; }
+cagr() { calc "cagr($1, $2, $3)"; }
+fv()   { calc "fv($1, $2, $3)"; }
 cmileage() { calc "($1-60340)*365/(dayssince('07 mar 2023'))"; }
 fmileage() { calc "($1-38413)*365/(dayssince('07 mar 2023'))"; }
 pmileage() { calc "($1-120896)*365/(dayssince('24 feb 2023'))"; }
