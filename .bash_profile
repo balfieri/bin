@@ -239,6 +239,7 @@ nv2mc() { calc "nv2mc($1)"; }
 mc2nv() { calc "mc2nv($1)"; }
 cagr() { calc "cagr($1, $2, $3)"; }
 fv()   { calc "fv($1, $2, $3)"; }
+pv()   { calc "pv($1, $2, $3)"; }
 cmileage() { calc "($1-60340)*365/(dayssince('07 mar 2023'))"; }
 fmileage() { calc "($1-38413)*365/(dayssince('07 mar 2023'))"; }
 pmileage() { calc "($1-120896)*365/(dayssince('24 feb 2023'))"; }
