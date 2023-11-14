@@ -135,7 +135,7 @@ alias gprm='git filter-repo --invert-paths --path'
 alias gptc='gpt -is_italian_convo 1'
 alias gptt='gpt -c translations'
 alias gpta='gpt -c transcription'
-alias sayi='say -v Alice -r 140'
+alias sayi='say -v Alice -r 120'
 alias s5='sayir 5'
 alias gst='git stash push'                 
 alias gstp='git stash pop'
@@ -352,8 +352,10 @@ export IDF_PATH=~/espidf
 if [ -f '/c/anaconda3/Scripts/conda.exe' ]; then
     # my Windows machine with an Anaconda environment
     export PATH=.:/c/anaconda3:/c/anaconda3/Library/mingw-w64/bin:/c/anaconda3/Library/usr/bin:/c/anaconda3/Library/bin:/c/anaconda3/Scripts:/c/anaconda3/bin:'/c/Program Files (x86)/GnuWin32/bin':/c/iverilog/bin:$b:${PATH_ORIG}
+    export PYTHON=python
 else
     export PATH=.:/bin:/usr/local/bin:/usr/bin:/usr/local/opt/bison/bin:/home/nv/bin:/sbin:$b:${MAGICK_HOME}/bin:/Library/TeX/texbin/:${AWS_HOME}:${ASSIMP_HOME}/bin:${c}/esp32elf/bin:$IDF_PATH/tools:$c/astc/Source:/usr/sbin:${ELMER_HOME}/bin:${HOME}/Library/Python/3.7/bin
+    export PYTHON=python3
 fi
 
 export NUSER=balfieri
