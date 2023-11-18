@@ -136,6 +136,7 @@ alias gptc='gpt -is_italian_convo 1'
 alias gptt='gpt -c translations'
 alias gpta='gpt -c transcription'
 alias sayi='say -v Alice -r 120'
+alias sayf='say -v Thomas -r 120'
 alias s5='sayir 5'
 alias gst='git stash push'                 
 alias gstp='git stash pop'
@@ -219,6 +220,7 @@ alias pitpr='cd $ccw; ./play_puz.py -subjects italian_passato_remoto'
 alias itw='cd $ccw; ./doit.www'
 alias itwn='cd $ccw; ./gen_www.py -cw_en 0'
 alias grit='cd $cst; ./grit.py' 
+grits() { cd $cst; ./grit.py $1 -s 1; }
 alias gw1='cd $cst; grit_words.py -file words1.out -one_per_line 1 >& grit1.out; vi grit1.out'
 alias sit='cd $cst; ./talk.py'
 alias xw='cd $ccw; open www/index.html'
@@ -352,7 +354,7 @@ export IDF_PATH=~/espidf
 if [ -f '/c/anaconda3/Scripts/conda.exe' ]; then
     # my Windows machine with an Anaconda environment
     export PATH=.:/c/anaconda3:/c/anaconda3/Library/mingw-w64/bin:/c/anaconda3/Library/usr/bin:/c/anaconda3/Library/bin:/c/anaconda3/Scripts:/c/anaconda3/bin:'/c/Program Files (x86)/GnuWin32/bin':/c/iverilog/bin:$b:${PATH_ORIG}
-    export PYTHON=python
+    export PYTHON=/anaconda/envs/env/bin/python
 else
     export PATH=.:/bin:/usr/local/bin:/usr/bin:/usr/local/opt/bison/bin:/home/nv/bin:/sbin:$b:${MAGICK_HOME}/bin:/Library/TeX/texbin/:${AWS_HOME}:${ASSIMP_HOME}/bin:${c}/esp32elf/bin:$IDF_PATH/tools:$c/astc/Source:/usr/sbin:${ELMER_HOME}/bin:${HOME}/Library/Python/3.7/bin
     export PYTHON=python3
@@ -362,11 +364,13 @@ export NUSER=balfieri
 export CRGSERVER=crg-epsilon.nvidia.com
 export B1SERVER=dc7-sim-d11-023.nvidia.com
 export XSERVER=sc-xterm-24.nvidia.com
+export AISERVER=10.137.205.33
 export DT=balfieri-dt.local
 export NUSD=${NUSER}@${DT}:
 export NUSDR=${NUSER}@${DT}:./__NVIDIA/rt
 export NUSDRE=${NUSDR}/scenes
 export NUSDRS=${NUSDR}/simplert
+export NUSA=${NUSER}@${AISERVER}
 export NUSC=${NUSER}@${CRGSERVER}
 export NUSCS=${NUSER}@${CRGSERVER}:/local/fastscratch/balfieri
 export NUSCR=${NUSC}:/local/fastscratch/balfieri/rt
@@ -416,9 +420,13 @@ alias shn5='sshpass -e ssh -o StrictHostKeyChecking=no ${NUSER}@crg-nclab-5.nvid
 alias shnx='sshpass -e ssh -o StrictHostKeyChecking=no ${NUSER}@${XSERVER}'
 alias shnb1='sshpass -e ssh -o StrictHostKeyChecking=no ${NUSER}@${B1SERVER}'
 alias shdt='sshpass -e ssh ${NUSER}@${DT}'
+alias shna='sshpass -p ${SSHPASSAI} ssh ${NUSER}@${AISERVER}'
 
 alias scn='sshpass -e scp -o StrictHostKeyChecking=no'
 alias scdt='sshpass -e scp -o StrictHostKeyChecking=no'
+alias scna='sshpass -p ${SSHPASSAI} scp -o StrictHostKeyChecking=no'
+alias tarvai='cd $c; tar cvfz vai.tar.gz vai'
+alias copyvai='scna vai.tar.gz ${NUSA}:.'
 alias copyrs='tar.rs; scn `ls rs*.gz | tail -1` $NUSC5/save/b.tar.gz'
 alias copyrt='tar.rt; scn `ls rt*.gz | tail -1` $NUSCR/save/r.tar.gz'
 alias copysyn1='scn syn.tar.gz $NUSXG1IVST'
