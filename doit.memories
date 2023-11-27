@@ -1,0 +1,3 @@
+export FILE=$1
+gpg --symmetric --cipher-algo aes256 --no-symkey-cache --output ${FILE}.tar.gz.gpg ${FILE}.tar.gz
+aws s3 cp ${FILE}.tar.gz.gpg s3://alfieri/${FILE}.tar.gz.gpg
