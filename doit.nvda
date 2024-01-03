@@ -23,7 +23,7 @@ while i < len(sys.argv):
     if   arg == '-growth_rate':
         growth_rate = float(sys.argv[i])
         i += 1
-    elif arg == '-share_cnt':
+    elif arg == '-c' or arg == '-share_cnt':
         share_cnt = int(sys.argv[i])
         i += 1
     elif arg == '-use_canned_prices':

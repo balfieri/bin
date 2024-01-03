@@ -16,7 +16,6 @@ export b=$c/bin
 export a=$d/Aviation
 export cs=$c/cs
 export cst=$c/study
-export ccw=$c/crossword
 export cw=$c/wordle
 export at=$a/Trips
 export ca=$c/aws
@@ -213,19 +212,19 @@ alias fditv='cd $cst; ./find_dups.py italian_vulgar'
 alias fditpr='cd $cst; ./find_dups.py italian_passato_remoto'
 alias fdit='cd $cst; ./find_dups.py italian_basic,italian_advanced,italian_expressions_common,italian_expressions_other,american_expressions_get,american_expressions_favorite,italian_vulgar,italian_passato_remoto,italian_tongue_twisters'
 alias fditq='cd $cst; ./find_dups.py italian_basic,italian_advanced,italian_expressions_common,italian_expressions_other,american_expressions_get,american_expressions_favorite,italian_vulgar,italian_passato_remoto,italian_tongue_twisters -q 1'
-alias pitb='cd $ccw; ./play_puz.py -subjects italian_basic'
-alias pita='cd $ccw; ./play_puz.py -subjects italian_advanced'
-alias pitar='cd $ccw; ./play_puz.py -subjects italian_advanced -start_pct 85'
-alias pitec='cd $ccw; ./play_puz.py -subjects italian_expressions_common'
-alias piteo='cd $ccw; ./play_puz.py -subjects italian_expressions_other'
-alias pitpr='cd $ccw; ./play_puz.py -subjects italian_passato_remoto'
-alias itw='cd $ccw; ./doit.www'
-alias itwn='cd $ccw; ./gen_www.py -cw_en 0'
+alias pitb='cd $cst; ./play_puz.py -subjects italian_basic'
+alias pita='cd $cst; ./play_puz.py -subjects italian_advanced'
+alias pitar='cd $cst; ./play_puz.py -subjects italian_advanced -start_pct 85'
+alias pitec='cd $cst; ./play_puz.py -subjects italian_expressions_common'
+alias piteo='cd $cst; ./play_puz.py -subjects italian_expressions_other'
+alias pitpr='cd $cst; ./play_puz.py -subjects italian_passato_remoto'
+alias itw='cd $cst; ./doit.www'
+alias itwn='cd $cst; ./gen_www.py -cw_en 0'
 alias grit='cd $cst; ./grit.py' 
 grits() { cd $cst; ./grit.py $1 -s 1; }
 alias gw1='cd $cst; grit_words.py -file words1.out -one_per_line 1 >& grit1.out; vi grit1.out'
 alias sit='cd $cst; ./talk.py'
-alias xw='cd $ccw; open www/index.html'
+alias xw='cd $cst; open www/index.html'
 f2c()  { calc "f2c($1)"; }
 c2f()  { calc "c2f($1)"; }
 k2m()  { calc "k2m($1)"; }
@@ -307,7 +306,8 @@ alias doa='disown -a'
 alias ngm='open $d/Manuals/Analog/ngspice*.pdf'
 alias hsme='open $d/Manuals/Analog/hspice_elements.pdf'
 alias sage='/Applications/SageMath-8.5.app/sage'
-alias gw='/Applications/gtkwave.app/Contents/MacOS/gtkwave-bin >& /dev/null &'
+#alias gw='/Applications/gtkwave.app/Contents/MacOS/gtkwave-bin >& /dev/null &'
+alias gw='gtkwave --rcvar "fontname_signals Monospace 20" --rcvar "fontname_waves Monospace 18" >& /dev/null &'
 alias vl='verilator --lint-only -Wall'
 alias vcc='verilator --cc'
 alias mouser='open $d/Manuals/Analog/mouser.pdf'
@@ -361,12 +361,14 @@ else
     export PATH=.:/bin:/usr/local/bin:/usr/bin:/usr/local/opt/bison/bin:/home/nv/bin:/sbin:$b:${MAGICK_HOME}/bin:/Library/TeX/texbin/:${AWS_HOME}:${ASSIMP_HOME}/bin:${c}/esp32elf/bin:$IDF_PATH/tools:$c/astc/Source:/usr/sbin:${ELMER_HOME}/bin:${HOME}/Library/Python/3.7/bin
     export PYTHON=python3
 fi
+alias py='${PYTHON}'
 
 export NUSER=balfieri
 export CRGSERVER=crg-epsilon.nvidia.com
 export B1SERVER=dc7-sim-d11-023.nvidia.com
 export XSERVER=sc-xterm-24.nvidia.com
-export AISERVER=10.137.205.33
+#export AISERVER=10.137.205.33
+export AISERVER=hgs-neuron1_eth0.nvidia.com
 export DT=balfieri-dt.local
 export NUSD=${NUSER}@${DT}:
 export NUSDR=${NUSER}@${DT}:./__NVIDIA/rt
@@ -428,7 +430,9 @@ alias scn='sshpass -e scp -o StrictHostKeyChecking=no'
 alias scdt='sshpass -e scp -o StrictHostKeyChecking=no'
 alias scna='sshpass -p ${SSHPASSAI} scp -o StrictHostKeyChecking=no'
 alias tarvai='cd $c; tar cvfz vai.tar.gz vai'
-alias copyvai='scna vai.tar.gz ${NUSA}:.'
+alias copyvai='cd $c; scna vai.tar.gz ${NUSA}:.'
+alias copynn='cd $c; scna nn.tar.gz ${NUSA}:.'
+alias copyouts='scna ${NUSA}:./outs.tar.gz .'
 alias copyrs='tar.rs; scn `ls rs*.gz | tail -1` $NUSC5/save/b.tar.gz'
 alias copyrt='tar.rt; scn `ls rt*.gz | tail -1` $NUSCR/save/r.tar.gz'
 alias copysyn1='scn syn.tar.gz $NUSXG1IVST'
