@@ -27,6 +27,21 @@ sub sum  { my $s = 0.0; for(@_) { $s += $_; } return $s; }
 sub cagr { (($_[1]/$_[0])**(1./$_[2]) - 1.0) * 100.0 }  # BV, EV, N
 sub fv   { $_[0] * (1.0 + $_[1]/100.0)**$_[2] }
 sub pv   { $_[0] / (1.0 + $_[1]/100.0)**$_[2] }
+sub lfv # loan future value  
+{
+    my $L  = shift; # loan amount for first period
+    my $N  = shift; # number of periods
+    my $LR = shift; # loan rate of increase
+    my $IR = shift; # interest rate per period
+
+    $fv = 0.0;
+    for ( 0 .. $N-1) {
+        $fv += $L;
+        $L *= (1.0 + $LR/100.0);
+        $fv *= (1.0 + $IR/100.0);
+    }
+    return $fv;
+}
 
 sub d2s  { str2time( $_[0] ) }
 sub dayssince { (d2s(`date`) - d2s($_[0])) / (3600*24) }
