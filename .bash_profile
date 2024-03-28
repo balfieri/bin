@@ -35,10 +35,6 @@ export cq=$c/qam
 export cr=$c/crashes
 export crr=$c/crashes/raw
 export cts=$ct/Source
-export cv=$c/vai
-export cva=$c/vai/aid
-export cvn=$c/vai/nn
-export cvv=$c/vai/v
 export cvp=$c/vpy
 export cp=$c/Pam
 export cpq=$cp/pam_questions
@@ -60,46 +56,13 @@ export nn=$n/nanovdb
 export ns=$n/slides
 export ne=$n/scenes
 export nerm=$n/scenes/Research/Main
-export nr=$c/rt
-export nr2=$c/rt2
-export nrc=$nr/cordic
-export nre=$nr/scenes
-export nrs=$nr/simplert
-export nrsa=$nr/simplert/debugastc
-export nrb=$nr/bvh
-export nrsc=$nr/compression
-export nrsr=$nr/simplert/reports
-export nrsrm=$nr/simplert/reports/movie
-export nrv=$nr/v
-export nr2s=$nr2/simplert
-export nr2v=$nr2/v
 export w=$d/Websites
 export wc=$w/imustcook.com
 export bw=~/balfieri
 export bws=${bw}/save
-export ngb=${HOME}/ngspice-bob
-export ngbd=${HOME}/ngspice-bob/src/spicelib/devices
-export ngbdb=$ngbd/bsimcmg
-export ngbrd=${HOME}/ngspice-bob/release/src/spicelib/devices
-export ngbrdb=$ngbrd/bsimcmg
-export ngff=${HOME}/ngspice-finfet
-export ngffr=$ngff/release_adms
-export ngcm=${HOME}/ngspice-cmg
-export ngffa=$ngff/src/spicelib/devices/adms
-export ngffra=$ngffr/src/spicelib/devices/adms
-export ngffat=$ngffa/admst
-export ngffab=$ngffa/bsimcmg
-export ngffaba=$ngffa/bsimcmg/admsva
-export ngffrab=$ngffra/bsimcmg
-export ngcma=$ngcm/src/spicelib/devices/adms
-export ngcmat=$ngcma/admst
-export ngcmab=$ngcma/bsimcmg
-export ngcmaba=$ngcma/bsimcmg/admsva
-export fxc=$fd/xplane11/Custom_Scenery
 export fp=$c/flightplan
 export fs=$c/flightsim
 export xp=~/xplane1150
-export xw=s3://imustcook.com/xplane/
 export xc=$x/*ery
 export xrc=$xr/*ery
 export xbc=$xb/*ery
@@ -166,8 +129,6 @@ alias s3='aws s3'
 alias cona='conda activate'
 alias cond='conda deactivate'
 alias sticks='cd $n/sticks; /usr/local/opt/perl@5.18/bin/perl sticks.pl'
-alias vds='cd $nrs; vi reports/doit.space'
-alias ds='cd $nrs; reports/doit.space'
 alias vu='vsim tb_NV_vu'
 alias ppl='cd $cst; ./run.py aviation -q 0 -ps 2'
 alias ifr='cd $cst; ./run.py aviation_ifr -q 0 -ps 2'
@@ -244,10 +205,9 @@ cagr() { calc "cagr($1, $2, $3)"; }
 fv()   { calc "fv($1, $2, $3)"; }
 pv()   { calc "pv($1, $2, $3)"; }
 lfv()  { calc "lfv($1, $2, $3, $4)"; }
-cmileage() { calc "($1-60340)*365/(dayssince('07 mar 2023'))"; }
-fmileage() { calc "($1-38413)*365/(dayssince('07 mar 2023'))"; }
-pmileage() { calc "($1-120896)*365/(dayssince('24 feb 2023'))"; }
-vmileage() { calc "($1-3)*365/(dayssince('18 feb 2023'))"; }
+cmileage() { calc "($1-64280)*365/(dayssince('10 feb 2024'))"; }
+pmileage() { calc "($1-125891)*365/(dayssince('10 feb 2024'))"; }
+vmileage() { calc "($1-4053)*365/(dayssince('10 feb 2024'))"; }
 
 alias tmcc='tmux -CC'
 alias tmcca='tmux -CC attach'
@@ -364,47 +324,6 @@ else
 fi
 alias py='${PYTHON}'
 
-export NUSER=balfieri
-export CRGSERVER=crg-epsilon.nvidia.com
-export B1SERVER=dc7-sim-d11-023.nvidia.com
-export XSERVER=sc-xterm-24.nvidia.com
-#export AISERVER=10.137.205.33
-export AISERVER=hgs-neuron1_eth0.nvidia.com
-export DT=balfieri-dt.local
-export NUSD=${NUSER}@${DT}:
-export NUSDR=${NUSER}@${DT}:./__NVIDIA/rt
-export NUSDRE=${NUSDR}/scenes
-export NUSDRS=${NUSDR}/simplert
-export NUSA=${NUSER}@${AISERVER}
-export NUSC=${NUSER}@${CRGSERVER}
-export NUSCS=${NUSER}@${CRGSERVER}:/local/fastscratch/balfieri
-export NUSCR=${NUSC}:/local/fastscratch/balfieri/rt
-export NUSCRS=${NUSC}:/local/fastscratch/balfieri/rt/simplert
-export NUSC5=${NUSC}:/local/fastscratch/balfieri/balfieri_volta_tree6/hw/nvgpu_sm_volta/vmod/vr/rs5
-export NUSCC=${NUSC}:/local/fastscratch/balfieri/balfieri_research_tree1/crg
-export NUSCO=${NUSC}:/local/fastscratch/balfieri/balfieri_research_tree1/research/Offsite/Offsite_2019
-export NUSB1=${NUSER}@${B1SERVER} 
-export NUSB2=${NUSER}@${B2SERVER}
-export NUSB3=${NUSER}@${B3SERVER}
-export NUSXV=${NUSER}@${XSERVER}:/home/scratch.balfieri_volta
-export NUSXS1=${NUSER}@${XSERVER}:/home/scratch.balfieri_volta
-export NUSXS2=${NUSER}@${XSERVER}:/home/scratch.balfieri_volta_1
-export NUSXS3=${NUSER}@${XSERVER}:/home/scratch.balfieri_gpu_1
-export NUSXS1M=${NUSER}@${XSERVER}:/home/scratch.balfieri_volta/balfieri_scenes2/Main
-export NUSXS1RS=${NUSXS1}/rt/simplert
-export NUSXS2RS=${NUSXS2}/rt2/simplert
-export NUSXS3RS=${NUSXS3}/rt3/simplert
-export NUSXG1=${NUSER}@${XSERVER}:/home/scratch.balfieri_gpu/rt_tree1/hw/nvgpu
-export NUSXG2=${NUSER}@${XSERVER}:/home/scratch.balfieri_gpu/rt_tree2/hw/nvgpu
-export NUSXG3=${NUSER}@${XSERVER}:/home/scratch.balfieri_gpu/rt_tree3/hw/class/hopper/ttu/ttubench
-export NUSXG1IVST=${NUSXG1}/ip/gpc/sm/smh/vmod/top/ghlit1
-export NUSXG2IVST=${NUSXG2}/ip/gpc/sm/smh/vmod/top/ghlit1
-export NUSXG1YS=${NUSXG1}/syn/sm
-export NUSXG2YS=${NUSXG2}/syn/sm
-export NUSXG1RS=${NUSXG1}/rt/simplert
-export NUSXG2RS=${NUSXG2}/rt/simplert
-export NUSXG1RV=${NUSXG1}/rt/v
-export NUSXG2RV=${NUSXG2}/rt/v
 export VVV=
 export VNC_GEOM='-geometry 1920x1200'
 export IVERILOG_DUMPER=lxt2
@@ -412,47 +331,17 @@ export IVERILOG_DUMPER=lxt2
 alias skg='ssh-keygen -t rsa -b 4096'
 
 alias pw='echo $SSHPASS'
-alias skan='ssh-add ~/.ssh/id_rsa.nvidia'
-alias shna='sshpass -e ssh -o StrictHostKeyChecking=no ${NUSER}@crg-alpha.nvidia.com'
-alias shnd='sshpass -e ssh -o StrictHostKeyChecking=no ${NUSER}@crg-delta.nvidia.com'
-alias shne='sshpass -e ssh -o StrictHostKeyChecking=no ${NUSER}@crg-epsilon.nvidia.com'
-alias shng='sshpass -e ssh -o StrictHostKeyChecking=no ${NUSER}@crg-gamma.nvidia.com'
-alias shn1='sshpass -e ssh -o StrictHostKeyChecking=no ${NUSER}@crg-nclab-1.nvidia.com'
-alias shn2='sshpass -e ssh -o StrictHostKeyChecking=no ${NUSER}@crg-nclab-2.nvidia.com'
-alias shn3='sshpass -e ssh -o StrictHostKeyChecking=no ${NUSER}@crg-nclab-3.nvidia.com'
-alias shn4='sshpass -e ssh -o StrictHostKeyChecking=no ${NUSER}@crg-nclab-4.nvidia.com'
-alias shn5='sshpass -e ssh -o StrictHostKeyChecking=no ${NUSER}@crg-nclab-5.nvidia.com'
-alias shnx='sshpass -e ssh -o StrictHostKeyChecking=no ${NUSER}@${XSERVER}'
-alias shnb1='sshpass -e ssh -o StrictHostKeyChecking=no ${NUSER}@${B1SERVER}'
-alias shdt='sshpass -e ssh ${NUSER}@${DT}'
-alias shna='sshpass -p ${SSHPASSAI} ssh ${NUSER}@${AISERVER}'
 
 alias scn='sshpass -e scp -o StrictHostKeyChecking=no'
 alias scdt='sshpass -e scp -o StrictHostKeyChecking=no'
 alias scna='sshpass -p ${SSHPASSAI} scp -o StrictHostKeyChecking=no'
 alias tarvai='cd $c; tar cvfz vai.tar.gz vai'
-alias copyvai='cd $c; scna vai.tar.gz ${NUSA}:.'
-alias copynn='cd $c; scna nn.tar.gz ${NUSA}:.'
-alias copyouts='scna ${NUSA}:./outs.tar.gz .'
-alias copyrs='tar.rs; scn `ls rs*.gz | tail -1` $NUSC5/save/b.tar.gz'
-alias copyrt='tar.rt; scn `ls rt*.gz | tail -1` $NUSCR/save/r.tar.gz'
-alias copysyn1='scn syn.tar.gz $NUSXG1IVST'
-alias copysyn2='scn syn.tar.gz $NUSXG2IVST'
-alias copyfrom2='scn $NUSXG2IVST/doit.powersim .; scn $NUSXG2IVST/powersim .; scn $NUSXG2IVST/doit.show_slack .; scn $NUSXG2IVST/doit.show_area .; scn $NUSXG2IVST/doit.show_energy .; scn $NUSXG2IVST/doit.clean_power .'
-alias copyreport2='scn $NUSXG2YS/area.out .; scn $NUSXG2YS/slack.out .; scn $NUSXG2YS/energy.out .'
-
-alias mkrtc='rm -f rtc; make rtc'
-alias mkrtc0='rm -f rtc; make rtc EXTRA_CFLAGS=-O0'
 
 alias gds2raw='$c/libGDSII/applications/GDSIIConvert --raw'
 alias gds2hier='$c/libGDSII/applications/GDSIIConvert --analyze'
 
 alias gb='cp /tmp/Backups* $d/ZZZ_Other/Backups/'
 
-alias ncvt='$n/nanovdb/build/cmd/nanovdb_convert'
-alias nprt='$n/nanovdb/build/cmd/nanovdb_print -l'
-alias vprt='$c/openvdb/build/openvdb/cmd/vdb_print'
-alias ve='$c/vdbedit/vdbedit.x'
 alias isync='cd $d; find . ! -path "*.icloud" \( -exec echo {} \; -a -exec touch {} \; \)'
 
 alias dds='echo `pwd` > ~/.default_dir'
