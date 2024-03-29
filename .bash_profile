@@ -19,11 +19,9 @@ export b=$c/bin
 export a=$d/Aviation
 export cs=$c/cs
 export cst=$c/study
-export at=$a/Trips
 export ca=$c/aws
 export cg=$c/gfx3d
 export cn=$c/mnt
-export cts=$ct/Source
 export cvp=$c/vpy
 export i=$d/Italian
 export m=$d/Manuals
@@ -62,9 +60,6 @@ alias gprm='git filter-repo --invert-paths --path'
 alias gptc='gpt -is_italian_convo 1'
 alias gptt='gpt -c translations'
 alias gpta='gpt -c transcription'
-alias sayi='say -v Alice -r 120'
-alias sayf='say -v Thomas -r 120'
-alias s5='sayir 5'
 alias gst='git stash push'                 
 alias gstp='git stash pop'
 alias gstl='git stash list'          
@@ -135,9 +130,11 @@ alias fditq='cd $cst; ./find_dups.py italian_basic,italian_advanced,italian_expr
 alias itw='cd $cst; ./doit.www'
 alias itwn='cd $cst; ./gen_www.py -cw_en 0'
 alias grit='cd $cst; ./grit.py' 
-grits() { cd $cst; ./grit.py $1 -s 1; }
 alias gw1='cd $cst; grit_words.py -file words1.out -one_per_line 1 >& grit1.out; vi grit1.out'
 alias sit='cd $cst; ./talk.py'
+alias sayi='say -v Alice -r 120'
+alias sayf='say -v Thomas -r 120'
+alias s5='sayir 5'
 alias xw='cd $cst; open www/index.html'
 
 f2c()  { calc "f2c($1)"; }
