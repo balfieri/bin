@@ -1,3 +1,0 @@
-#!/home/gnu/bin/perl -w
-#
-print hex( $ARGV[0] ) . "\n";
