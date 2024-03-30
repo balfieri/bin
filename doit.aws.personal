@@ -1,8 +1,0 @@
-cd ~/Backups
-export date=`date +%Y_%m_%d`
-export tar=bobbo.personal.${date}.tar.gz
-tar cvfz ${tar} personal*gpg
-gpg --encrypt --recipient bob_alfieri@yahoo.com ${tar}
-aws s3 cp ${tar}.gpg s3://alfieri/
-cp ${tar}.gpg $d/Backups
-rm -f ${tar}
