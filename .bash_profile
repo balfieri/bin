@@ -230,8 +230,9 @@ alias up2='denon vol_up2'
 alias dn1='denon vol_down1'
 alias dn2='denon vol_down2'
 alias atv='atvremote -n "Family Room" --mrp-credentials `cat ~/mrp_fr_creds` cli'
+alias py='${PYTHON}'
 
-# not really using this right now, could delete it
+# not really using this right now, could probably delete it
 GPG_TTY=$(/usr/bin/tty)
 SSH_AUTH_SOCK="$HOME/.gnupg/S.gpg-agent.ssh"
 export GPG_TTY SSH_AUTH_SOCK
@@ -241,13 +242,9 @@ alias gar='killall gpg-agent; gpg-agent --daemon'
 alias gpgeb='gpg --encrypt --recipient "Bob Alfieri"'
 alias gpgey='gpg --encrypt --recipient yubikey1'
 
-export DYLD_LIBRARY_PATH=${MAGICK_HOME}/lib/:${DYLD_LIBRARY_PATH}:${c}/libgdsii/lib/.libs
 export DYLD_LIBRARY_PATH=/usr/local/opt/openssl/lib:$DYLD_LIBRARY_PATH
-export DYLD_LIBRARY_PATH=${DYLD_LIBRARY_PATH}:$ELMER_HOME/lib
-export IDF_PATH=~/espidf
 
-export PATH=.:/bin:/usr/local/bin:/usr/bin:/usr/local/opt/bison/bin:/home/nv/bin:/sbin:$b:${MAGICK_HOME}/bin:/Library/TeX/texbin/:${AWS_HOME}:${ASSIMP_HOME}/bin:${c}/esp32elf/bin:$IDF_PATH/tools:$c/astc/Source:/usr/sbin:${ELMER_HOME}/bin:${HOME}/Library/Python/3.7/bin
+export PATH=.:/bin:/usr/local/bin:/usr/bin:/sbin:${b}:${AWS_HOME}
 export PYTHON=python3
-alias py='${PYTHON}'
 
 dd
