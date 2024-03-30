@@ -4,9 +4,6 @@
 set -o vi
 
 export BASH_SILENCE_DEPRECATION_WARNING=1
-export AWS_DEFAULT_PROFILE=default
-export AWS_MASTER_INSTANCE=i-0128179c44436f90a
-export AWS_HOME="${c}/aws"
 if [ -f ~/.openai_key.txt ]; then
     export OPENAI_API_KEY=`cat ~/.openai_key.txt`
 fi
@@ -15,6 +12,11 @@ if [ -f ~/.anthropic_key.txt ]; then
 fi
 if [ -f ~/.perplexity_key.txt ]; then
     export PERPLEXITY_API_KEY=`cat ~/.perplexity_key.txt`
+fi
+export AWS_HOME="${c}/aws"
+export AWS_DEFAULT_PROFILE=default
+if [ -f ~/.aws_master_instance.txt ]; then
+    export AWS_MASTER_INSTANCE=`cat ~/.aws_master_instance.txt`
 fi
 export VVV=
 export IVERILOG_DUMPER=lxt2
