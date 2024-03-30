@@ -1,4 +1,0 @@
-cd $co
-rm -fr Orthophotos
-python3.7 -W ignore::FutureWarning *v130.py
-rm -fr Orthophotos
