@@ -234,7 +234,6 @@ alias dn2='denon vol_down2'
 alias atv='atvremote -n "Family Room" --mrp-credentials `cat ~/mrp_fr_creds` cli'
 alias py='${PYTHON}'
 
-# not really using this right now, could probably delete it
 GPG_TTY=$(/usr/bin/tty)
 SSH_AUTH_SOCK="$HOME/.gnupg/S.gpg-agent.ssh"
 export GPG_TTY SSH_AUTH_SOCK
