@@ -255,10 +255,14 @@ alias gar='killall gpg-agent; gpg-agent --daemon'
 alias gpgeb='gpg --encrypt --recipient "Bob Alfieri"'
 alias gpgey='gpg --encrypt --recipient yubikey1'
 
-# misc server for offloading work
-fms1()    { scp -r ${SERVER1_USER}@${SERVER1}:$1 $2; }
-tos1()    { scp -r $1 ${SERVER1_USER}@${SERVER1}:$2; }
-alias ons1='ssh ${SERVER1_USER}@${SERVER1}'
+# doing stuff on servers
+function fm() { scp -r ${1}:${2} ${3}; }
+function to() { scp -r ${2} ${1}:${3}; }
+function on() { USER_AT_SERVER=$1; shift; ssh ${USER_AT_SERVER} ${@}; }
+
+function fms1() { fm ${SERVER1_USER}@${SERVER1} $@; }
+function tos1() { to ${SERVER1_USER}@${SERVER1} $@; }
+function ons1() { on ${SERVER1_USER}@${SERVER1} $@; }
 
 export DYLD_LIBRARY_PATH=/usr/local/opt/openssl/lib:$DYLD_LIBRARY_PATH
 
