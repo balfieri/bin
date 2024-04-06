@@ -22,6 +22,16 @@ if [ -f ~/.aws_master_instance.txt ]; then
     export AWS_MASTER_INSTANCE=`cat ~/.aws_master_instance.txt`
 fi
 
+if [ -f ~/.server1_name.txt ]; then
+    export SERVER1=`cat ~/.server1_name.txt`
+fi
+
+if [ -f ~/.server1_user.txt ]; then
+    export SERVER1_USER=`cat ~/.server1_user.txt`
+else
+    export SERVER1_USER=${USER}
+fi
+
 export md=/Volumes/memories
 export d=~/IDrive
 export c=~/Code
@@ -244,6 +254,11 @@ gpg-agent --daemon >& /dev/null
 alias gar='killall gpg-agent; gpg-agent --daemon'
 alias gpgeb='gpg --encrypt --recipient "Bob Alfieri"'
 alias gpgey='gpg --encrypt --recipient yubikey1'
+
+# misc server for offloading work
+fms1()    { scp -r ${SERVER1_USER}@${SERVER1}:$1 $2; }
+tos1()    { scp -r $1 ${SERVER1_USER}@${SERVER1}:$2; }
+alias ons1='ssh ${SERVER1_USER}@${SERVER1}'
 
 export DYLD_LIBRARY_PATH=/usr/local/opt/openssl/lib:$DYLD_LIBRARY_PATH
 
