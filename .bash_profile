@@ -158,28 +158,28 @@ alias sayf='say -v Thomas -r 120'
 alias s5='sayir 5'
 alias xw='cd $cst; open www/index.html'
 
-f2c()  { calc "f2c($1)"; }
-c2f()  { calc "c2f($1)"; }
-k2m()  { calc "k2m($1)"; }
-m2k()  { calc "m2k($1)"; }
-p2k()  { calc "p2k($1)"; }
-k2p()  { calc "k2p($1)"; }
-o2g()  { calc "o2g($1)"; }
-g2o()  { calc "g2o($1)"; }
-i2m()  { calc "i2m($1)"; }
-m2i()  { calc "m2i($1)"; }
-f2m()  { calc "f2m($1)"; }
-m2f()  { calc "m2f($1)"; }
-bmi()  { calc "bmi(p2k($1), i2m(71))"; }
-nv2mc() { calc "nv2mc($1)"; }
-mc2nv() { calc "mc2nv($1)"; }
-cagr() { calc "cagr($1, $2, $3)"; }
-fv()   { calc "fv($1, $2, $3)"; }
-pv()   { calc "pv($1, $2, $3)"; }
-lfv()  { calc "lfv($1, $2, $3, $4)"; }
-cmileage() { calc "($1-64280)*365/(dayssince('10 feb 2024'))"; }
-pmileage() { calc "($1-125891)*365/(dayssince('10 feb 2024'))"; }
-vmileage() { calc "($1-4053)*365/(dayssince('10 feb 2024'))"; }
+function f2c()  { calc "f2c($1)"; }
+function c2f()  { calc "c2f($1)"; }
+function k2m()  { calc "k2m($1)"; }
+function m2k()  { calc "m2k($1)"; }
+function p2k()  { calc "p2k($1)"; }
+function k2p()  { calc "k2p($1)"; }
+function o2g()  { calc "o2g($1)"; }
+function g2o()  { calc "g2o($1)"; }
+function i2m()  { calc "i2m($1)"; }
+function m2i()  { calc "m2i($1)"; }
+function f2m()  { calc "f2m($1)"; }
+function m2f()  { calc "m2f($1)"; }
+function bmi()  { calc "bmi(p2k($1), i2m(71))"; }
+function nv2mc() { calc "nv2mc($1)"; }
+function mc2nv() { calc "mc2nv($1)"; }
+function cagr() { calc "cagr($1, $2, $3)"; }
+function fv()   { calc "fv($1, $2, $3)"; }
+function pv()   { calc "pv($1, $2, $3)"; }
+function lfv()  { calc "lfv($1, $2, $3, $4)"; }
+function cmileage() { calc "($1-64280)*365/(dayssince('10 feb 2024'))"; }
+function pmileage() { calc "($1-125891)*365/(dayssince('10 feb 2024'))"; }
+function vmileage() { calc "($1-4053)*365/(dayssince('10 feb 2024'))"; }
 
 alias e=env
 alias eg='env | grep'
