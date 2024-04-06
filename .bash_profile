@@ -255,7 +255,7 @@ alias gar='killall gpg-agent; gpg-agent --daemon'
 alias gpgeb='gpg --encrypt --recipient "Bob Alfieri"'
 alias gpgey='gpg --encrypt --recipient yubikey1'
 
-# doing stuff on servers
+# copying to/from and running stuff on servers
 function fm() { scp -r ${1}:${2} ${3}; }
 function to() { scp -r ${2} ${1}:${3}; }
 function on() { USER_AT_SERVER=$1; shift; ssh ${USER_AT_SERVER} ${@}; }
