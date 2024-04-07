@@ -177,9 +177,9 @@ function cagr() { calc "cagr($1, $2, $3)"; }
 function fv()   { calc "fv($1, $2, $3)"; }
 function pv()   { calc "pv($1, $2, $3)"; }
 function lfv()  { calc "lfv($1, $2, $3, $4)"; }
-function cmileage() { calc "($1-64280)*365/(dayssince('10 feb 2024'))"; }
-function pmileage() { calc "($1-125891)*365/(dayssince('10 feb 2024'))"; }
-function vmileage() { calc "($1-4053)*365/(dayssince('10 feb 2024'))"; }
+function cmileage() { calc "($1-64280)*365/(dayssince('10 02 2024'))"; }
+function pmileage() { calc "($1-125891)*365/(dayssince('10 02 2024'))"; }
+function vmileage() { calc "($1-4053)*365/(dayssince('10 02 2024'))"; }
 
 alias e=env
 alias eg='env | grep'

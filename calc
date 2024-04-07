@@ -1,51 +1,54 @@
-#!/usr/bin/perl -w
+#!/usr/bin/python3
 #
-use Math::Trig;
-use Date::Parse;
+import sys
+import math
+import datetime
+import time
 
-sub log2 { log( $_[0] ) / log( 2 ) }
+def log2( n ):  return math.log( n ) / math.log( 2 )
 
-sub f2c  { ($_[0] - 32.0) * 5.0/9.0 }
-sub c2f  { $_[0] * 9.0/5.0 + 32     }
+def f2c( f ):   return (f - 32.0) * 5.0/9.0
+def c2f( c ):   return c * 9.0/5.0 + 32
 
-sub k2m  { $_[0] * 0.6213712 }
-sub m2k  { $_[0] / 0.6213712 }
-sub k2p  { $_[0] / 0.4535924 }
-sub p2k  { $_[0] * 0.4535924 }
-sub o2g  { p2k($_[0]/16.0) * 1000.0 }
-sub g2o  { k2p($_[0]/1000.0) * 16.0 }
-sub i2m  { $_[0] * 0.0254 }
-sub m2i  { $_[0] / 0.0254 }
-sub f2m  { i2m( 12* $_[0] ) }
-sub m2f  { m2i( $_[0] ) / 12.0 }
-sub bmi  { $_[0] / ($_[1]*$_[1]) }
+def k2m( k ):   return k * 0.6213712
+def m2k( m ):   return m / 0.6213712
+def k2p( k ):   return k / 0.4535924
+def p2k( p ):   return p * 0.4535924
+def o2g( o ):   return p2k(o/16.0) * 1000.0
+def g2o( g ):   return k2p(g/1000.0) * 16.0
+def i2m( i ):   return i * 0.0254
+def m2i( m ):   return m / 0.0254
+def f2m( f ):   return i2m( 12* n )
+def m2f( m ):   return m2i( m ) / 12.0
+def bmi( w, h ):return w / (h*h)
 
-sub nv2mc { $_[0]/240.63*594.356 }
-sub mc2nv { $_[0]/594.356*240.63 }
+def nv2mc( nv ):return nv/240.63*594.356                # NVDA stock price => market cap in $B
+def mc2nv( mc ):return mc/594.356*240.63                # inverse
 
-sub sum  { my $s = 0.0; for(@_) { $s += $_; } return $s; }
-sub cagr { (($_[1]/$_[0])**(1./$_[2]) - 1.0) * 100.0 }  # BV, EV, N
-sub fv   { $_[0] * (1.0 + $_[1]/100.0)**$_[2] }
-sub pv   { $_[0] / (1.0 + $_[1]/100.0)**$_[2] }
-sub lfv # loan future value  
-{
-    my $L  = shift; # loan amount for first period
-    my $N  = shift; # number of periods
-    my $LR = shift; # loan rate of increase
-    my $IR = shift; # interest rate per period
+def cagr( BV, EV, N ): return ((EV/BV)**(1./N) - 1.0) * 100.0  # BV=beginning value, EV=ending value, N=num years
+def fv( PV, R, N ):    return PV * (1.0 + R/100.0)**N          
+def pv( FV, R, N ):    return FV / (1.0 + R/100.0)**N
+def lfv( L, N, LR, IR ): # L=initial loan, N=num periods, LR=loan rate of increase, IR=interest rate
+    FV = 0.0;
+    for i in range(N):
+        FV += L
+        L  *= 1.0 + LR/100.0
+        FV *= 1.0 + IR/100.0
+    return FV
 
-    $fv = 0.0;
-    for ( 0 .. $N-1) {
-        $fv += $L;
-        $L *= (1.0 + $LR/100.0);
-        $fv *= (1.0 + $IR/100.0);
-    }
-    return $fv;
-}
+# format should be: 04 11 2024
+def d2s( date_s ):
+    date_obj = datetime.datetime.strptime( date_s, '%d %m %Y' )
+    return time.mktime( date_obj.timetuple() )
 
-sub d2s  { str2time( $_[0] ) }
-sub dayssince { (d2s(`date`) - d2s($_[0])) / (3600*24) }
+# current date string in same format
+def date(): 
+    now = datetime.datetime.now()
+    return now.strftime( '%d %m %Y' )
 
-my $expr = join( " ", @ARGV );
-my $val  = eval( $expr );
-printf "%d      %0.30f  0x%x  0b%b\n", $val, $val, $val, $val;
+def dayssince( date_s ): return (d2s( date() ) - d2s( date_s )) / (3600*24)
+
+expr = ' '.join( sys.argv[1:] )
+v    = eval( expr )
+vi   = int(v)
+print( f'{vi:d}    {v:0.30f}    0x{vi:x}   0b{vi:b}' )
