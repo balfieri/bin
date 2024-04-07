@@ -1,8 +1,25 @@
-#!/usr/bin/perl
-use strict;
-use warnings;
+#!/usr/bin/python3
+#
+import sys
+import subprocess
 
-@ARGV == 1 or die "usage : enc <file>\n";
-my $file = shift @ARGV;
+cmd_en = True
 
-system( "openssl aes-256-cbc -salt -in ${file} -out ${file}.enc" ) == 0 or die "ERROR: encryption failed\n";
+def die( msg ):
+    print( f'ERROR: {msg}' )
+    sys.exit( 1 )
+
+def cmd( c, echo=True, echo_stdout=False, can_die=True ):  
+    if echo: print( c )
+    if cmd_en:
+        info = subprocess.run( c, shell=True, text=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT )
+        if echo_stdout: print( info.stdout )
+        if can_die and info.returncode != 0: die( f'command failed: {c}' )
+        return info.stdout
+    else:
+        return ''
+
+if len(sys.argv) != 2: die( 'usage : encrypt <file>' )
+file = sys.argv[1]
+
+cmd( f'gpg --symmetric --cipher-algo aes256 --no-symkey-cache --output {file}.gpg {file}' )
