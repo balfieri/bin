@@ -36,7 +36,7 @@ def lfv( L, N, LR, IR ): # L=initial loan, N=num periods, LR=loan rate of increa
         FV *= 1.0 + IR/100.0
     return FV
 
-# format should be: 04 11 2024
+# format should be: 30 11 2024
 def d2s( date_s ):
     date_obj = datetime.datetime.strptime( date_s, '%d %m %Y' )
     return time.mktime( date_obj.timetuple() )
