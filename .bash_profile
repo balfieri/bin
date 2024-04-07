@@ -52,6 +52,7 @@ export w=$d/Websites
 export wc=$w/imustcook.com
 export fp=$c/flightplan
 export fs=$c/flightsim
+
 alias gs='git status'
 alias ga='git add --all; git status'
 alias gc='git commit -m' 
@@ -157,30 +158,6 @@ alias sayi='say -v Alice -r 120'
 alias sayf='say -v Thomas -r 120'
 alias s5='sayir 5'
 alias xw='cd $cst; open www/index.html'
-
-function f2c()  { calc "f2c($1)"; }
-function c2f()  { calc "c2f($1)"; }
-function k2m()  { calc "k2m($1)"; }
-function m2k()  { calc "m2k($1)"; }
-function p2k()  { calc "p2k($1)"; }
-function k2p()  { calc "k2p($1)"; }
-function o2g()  { calc "o2g($1)"; }
-function g2o()  { calc "g2o($1)"; }
-function i2m()  { calc "i2m($1)"; }
-function m2i()  { calc "m2i($1)"; }
-function f2m()  { calc "f2m($1)"; }
-function m2f()  { calc "m2f($1)"; }
-function bmi()  { calc "bmi(p2k($1), i2m(71))"; }
-function nv2mc() { calc "nv2mc($1)"; }
-function mc2nv() { calc "mc2nv($1)"; }
-function cagr() { calc "cagr($1, $2, $3)"; }
-function fv()   { calc "fv($1, $2, $3)"; }
-function pv()   { calc "pv($1, $2, $3)"; }
-function lfv()  { calc "lfv($1, $2, $3, $4)"; }
-function cmileage() { calc "($1-64280)*365/(dayssince('10 02 2024'))"; }
-function pmileage() { calc "($1-125891)*365/(dayssince('10 02 2024'))"; }
-function vmileage() { calc "($1-4053)*365/(dayssince('10 02 2024'))"; }
-
 alias e=env
 alias eg='env | grep'
 alias h=history
@@ -246,14 +223,29 @@ alias dn2='denon vol_down2'
 alias atv='atvremote -n "Family Room" --mrp-credentials `cat ~/mrp_fr_creds` cli'
 alias py='${PYTHON}'
 
-GPG_TTY=$(/usr/bin/tty)
-SSH_AUTH_SOCK="$HOME/.gnupg/S.gpg-agent.ssh"
-export GPG_TTY SSH_AUTH_SOCK
-killall gpg-agent >& /dev/null
-gpg-agent --daemon >& /dev/null
-alias gar='killall gpg-agent; gpg-agent --daemon'
-alias gpgeb='gpg --encrypt --recipient "Bob Alfieri"'
-alias gpgey='gpg --encrypt --recipient yubikey1'
+# calc function shorthands
+function f2c()  { calc "f2c($1)"; }
+function c2f()  { calc "c2f($1)"; }
+function k2m()  { calc "k2m($1)"; }
+function m2k()  { calc "m2k($1)"; }
+function p2k()  { calc "p2k($1)"; }
+function k2p()  { calc "k2p($1)"; }
+function o2g()  { calc "o2g($1)"; }
+function g2o()  { calc "g2o($1)"; }
+function i2m()  { calc "i2m($1)"; }
+function m2i()  { calc "m2i($1)"; }
+function f2m()  { calc "f2m($1)"; }
+function m2f()  { calc "m2f($1)"; }
+function bmi()  { calc "bmi(p2k($1), i2m(71))"; }
+function nv2mc() { calc "nv2mc($1)"; }
+function mc2nv() { calc "mc2nv($1)"; }
+function cagr() { calc "cagr($1, $2, $3)"; }
+function fv()   { calc "fv($1, $2, $3)"; }
+function pv()   { calc "pv($1, $2, $3)"; }
+function lfv()  { calc "lfv($1, $2, $3, $4)"; }
+function cmileage() { calc "($1-64280)*365/(dayssince('10 02 2024'))"; }
+function pmileage() { calc "($1-125891)*365/(dayssince('10 02 2024'))"; }
+function vmileage() { calc "($1-4053)*365/(dayssince('10 02 2024'))"; }
 
 # copying to/from other machines or running a command on them
 function fm() { scp -r ${1}:${2} ${3}; }
@@ -263,9 +255,16 @@ function fms1() { fm ${SERVER1_USER}@${SERVER1} $@; }
 function tos1() { to ${SERVER1_USER}@${SERVER1} $@; }
 function ons1() { on ${SERVER1_USER}@${SERVER1} $@; }
 
+# paths
 export DYLD_LIBRARY_PATH=/usr/local/opt/openssl/lib:$DYLD_LIBRARY_PATH
-
 export PATH=.:/bin:/usr/local/bin:/usr/bin:/sbin:${b}:${AWS_HOME}
 export PYTHON=python3
+
+# start up gpg-agent (needed even for symmetric keys)
+GPG_TTY=$(/usr/bin/tty)
+SSH_AUTH_SOCK="$HOME/.gnupg/S.gpg-agent.ssh"
+export GPG_TTY SSH_AUTH_SOCK
+killall gpg-agent >& /dev/null
+gpg-agent --daemon >& /dev/null
 
 dd
