@@ -1,0 +1,69 @@
+#!/usr/bin/python3
+#
+import sys
+
+sites = [
+'ai.nvidia.com',
+'anandtech.com',
+'blogs.nvidia.com',
+'bloomberg.com/ai',
+'bloomberg.com/technology',
+'breakingnews.com',
+'businessinsider.com',
+'businesstimes.com',
+'cdrinfo.com',
+'channelasia.com',
+'dexerto.com',
+'digitalisationworld.com',
+'digitaltrends.com',
+'digitimes.com',
+'finance.yahoo.com',
+'forbes.com',
+'fortune.com',
+'fudzilla.com',
+'gamesradar.com',
+'hardwaretimes.com',
+'hothardware.com',
+'huggingface.co/blog',
+'networkworld.com',
+'nextplatform.com',
+'nytimes.com',
+'overclocking.com',
+'pcgamer.com',
+'pcworld.com',
+'semianalysis.com',
+'straightstimes.com',
+'taipeitimes.com',
+'tech.everyeye.it',
+'techcircle.com',
+'techpowerup.com',
+'techradar.com',
+'theinformation.com',
+'theregister.com',
+'theverge.com',
+'tomshardware.com',
+'tweaktown.com',
+'venturebeat.com',
+'verdict.co.uk',
+'wccftech.com',
+'xdadevelopers.com',
+]
+
+print( '''
+<!DOCTYPE NETSCAPE-Bookmark-file-1>
+<!--This is an automatically generated file.
+It will be read and overwritten.
+DO NOT EDIT! -->
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8">
+<Title>News</Title>
+<H1>News</H1>
+<DL><p>
+''' )
+
+for site in sites:
+    print( f'<DT><A HREF="http://www.{site}" ADD_DATE="1618855926" LAST_MODIFIED="1618855926">{site}</A>' )
+
+print( '''
+</DL><p>
+''' )
+
