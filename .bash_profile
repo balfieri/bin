@@ -42,7 +42,10 @@ export cst=$c/study
 export ca=$c/aws
 export cg=$c/gfx3d
 export cn=$c/mnt
+export cp=$c/screenplay
 export cvp=$c/vpy
+export cfp=$c/flightplan
+export cfs=$c/flightsim
 export i=$d/Italian
 export m=$d/Manuals
 export ma=$d/Manuals/Aviation
@@ -50,8 +53,6 @@ export mam=$d/Manuals/Aviation/Medical
 export mr=$d/Manuals/RT
 export w=$d/Websites
 export wc=$w/imustcook.com
-export fp=$c/flightplan
-export fs=$c/flightsim
 
 alias gs='git status'
 alias ga='git add --all; git status'
@@ -194,8 +195,6 @@ alias dfm='df -m .'
 alias dfg='df -g .'
 alias dum='du -m'
 alias dug='du -g'
-alias temp='~/osx-cpu-temp/osx-cpu-temp'
-alias freq='sysctl -a | grep cpufrequency'
 alias db='lldb --source ~/.lldbrc'
 alias doa='disown -a'
 alias gw='gtkwave --rcvar "fontname_signals Monospace 20" --rcvar "fontname_waves Monospace 18" >& /dev/null &'
@@ -260,7 +259,7 @@ export DYLD_LIBRARY_PATH=/usr/local/opt/openssl/lib:$DYLD_LIBRARY_PATH
 export PATH=.:/bin:/usr/local/bin:/usr/bin:/sbin:${b}:${AWS_HOME}
 export PYTHON=python3
 
-# start up gpg-agent (needed even for symmetric keys)
+# start up gpg-agent (needed even for symmetric keys using only a passphrase)
 GPG_TTY=$(/usr/bin/tty)
 SSH_AUTH_SOCK="$HOME/.gnupg/S.gpg-agent.ssh"
 export GPG_TTY SSH_AUTH_SOCK
