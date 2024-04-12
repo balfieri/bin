@@ -16,7 +16,7 @@ if [ -f ~/.perplexity_key.txt ]; then
     export PERPLEXITY_API_KEY=`cat ~/.perplexity_key.txt`
 fi
 
-export AWS_HOME="${c}/aws"
+export AWS_HOME="${HOME}/Code/aws"
 export AWS_DEFAULT_PROFILE=default
 if [ -f ~/.aws_master_instance.txt ]; then
     export AWS_MASTER_INSTANCE=`cat ~/.aws_master_instance.txt`
