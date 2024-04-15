@@ -184,6 +184,7 @@ alias c=calc
 alias fgr='find . -depth -print | grep'
 alias psg='ps -ef | grep ${USER} | grep'
 alias tot="awk '{ total += \$1 }; END { print total }'"
+alias mkc="make clean"
 alias vmo='vi make.out'
 alias tf='tail -f'
 alias mmo='more make.out'
