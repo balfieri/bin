@@ -4,6 +4,7 @@
 #
 import os
 import requests
+from bs4 import BeautifulSoup
 
 login_url = 'https://prenotami.esteri.it'
 login_data = {
@@ -16,7 +17,11 @@ session = requests.Session()
 response = session.get( login_url )
 print( response.text )
 
-# use BeautifulSoup to parse
+soup = BeautifulSoup( response.text, 'html.parser' )
+
+links = soup.find_all('a')
+for link in links:
+    print( link.get('href') )
 
 #response = session.post( login_url, data=login_data )
 #print( response.text )
