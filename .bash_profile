@@ -15,6 +15,12 @@ fi
 if [ -f ~/.perplexity_key.txt ]; then
     export PERPLEXITY_API_KEY=`cat ~/.perplexity_key.txt`
 fi
+if [ -f ~/.prenotami_username.txt ]; then
+    export PRENOTAMI_USERNAME=`cat ~/.prenotami_username.txt`
+fi
+if [ -f ~/.prenotami_password.txt ]; then
+    export PRENOTAMI_PASSWORD=`cat ~/.prenotami_password.txt`
+fi
 
 export AWS_HOME="${HOME}/Code/aws"
 export AWS_DEFAULT_PROFILE=default
@@ -25,7 +31,6 @@ fi
 if [ -f ~/.server1_name.txt ]; then
     export SERVER1=`cat ~/.server1_name.txt`
 fi
-
 if [ -f ~/.server1_user.txt ]; then
     export SERVER1_USER=`cat ~/.server1_user.txt`
 else

@@ -1,0 +1,24 @@
+#!/usr/bin/env python3
+#
+# prenotami - continually check appointment availability on prenotami.esteri.it
+#
+import os
+import requests
+
+login_url = 'https://prenotami.esteri.it'
+login_data = {
+    'username': os.getenv( 'PRENOTAMI_USERNAME' ),
+    'password': os.getenv( 'PRENOTAMI_PASSWORD' )
+}
+
+session = requests.Session()
+
+response = session.get( login_url )
+print( response.text )
+
+# use BeautifulSoup to parse
+
+#response = session.post( login_url, data=login_data )
+#print( response.text )
+
+# make other requests
