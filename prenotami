@@ -8,22 +8,23 @@ from bs4 import BeautifulSoup
 
 login_url = 'https://prenotami.esteri.it'
 login_data = {
-    'username': os.getenv( 'PRENOTAMI_USERNAME' ),
-    'password': os.getenv( 'PRENOTAMI_PASSWORD' )
+    'Email':    os.getenv( 'PRENOTAMI_USERNAME' ),
+    'Password': os.getenv( 'PRENOTAMI_PASSWORD' )
 }
 
 session = requests.Session()
 
+# go to main login page
 response = session.get( login_url )
-print( response.text )
-
+response.raise_for_status()
 soup = BeautifulSoup( response.text, 'html.parser' )
 
-links = soup.find_all('a')
-for link in links:
-    print( link.get('href') )
+# fill in Email/Password fields and submit
+login_form = soup.find( 'form' )
+action_url = login_url + login_form['action']
+response = session.post( action_url, data=login_data )  
+# it hangs, perhaps "click" on forward button instead?
+response.raise_for_status()
+soup = BeautifulSoup( response.text, 'html.parser' )
 
-#response = session.post( login_url, data=login_data )
-#print( response.text )
-
-# make other requests
+print( soup.prettify() )
