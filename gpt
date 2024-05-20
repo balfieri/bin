@@ -132,8 +132,7 @@ while True:
             continue
 
     messages.append( {'role': 'user', 'content': prompt} )
-    if input_line == '': print( '-----------------------------------' )
-    print( '\n' )
+    print( '-----------------------------------\n' )
 
     response = openai.ChatCompletion.create(
         model=model,
