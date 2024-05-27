@@ -25,11 +25,17 @@ def cmd( c, echo=True, echo_stdout=False, can_die=True ):
     else:
         return ''
 
+def file_read( file_name ):
+    if not os.path.exists( file_name ): die( f'file not found: {file_name}' )
+    with open( file_name ) as my_file:
+        data = my_file.read()
+    return data
+
 openai.api_key   = os.getenv( 'OPENAI_API_KEY' )
 model            = 'gpt-4o'
 context          = ''
 is_multi_line    = False
-input_line       = ''
+input_s          = ''
 recording_dead_time = 3.0
 english_voice    = 'Samantha'
 italian_voice    = 'Alice'
@@ -47,9 +53,12 @@ while i < len(sys.argv):
         context = sys.argv[i]
         i += 1
     elif arg == '-i':
-        i + 1
-        input_line = ' '.join( sys.argv[i:] )
+        input_s = ' '.join( sys.argv[i:] )
+        i += 1
         break
+    elif arg == '-f':
+        input_s = file_read( sys.argv[i] )
+        i += 1
     elif arg == '-recording_dead_time':
         recording_dead_time = float( sys.argv[i] )
         i += 1
@@ -116,10 +125,10 @@ while True:
         prompt = record_audio( True )
         if prompt == '': continue
     else:
-        if input_line == '':
+        if input_s == '':
             prompt = prompt_read( '', is_multi_line )
         else:
-            prompt = input_line
+            prompt = input_s
         if context != '':
             prompt = context + '\n' + prompt
             context = ''
@@ -147,8 +156,8 @@ while True:
     resp = response['choices'][0]['message']['content']
     messages.append( {'role': 'assistant', 'content': resp} )
     print( f'{resp}' )
-    if input_line == '': print( '-----------------------------------\n' )
+    if input_s == '': print( '-----------------------------------\n' )
     resp_text = messages[-1]['content']
     if is_italian_convo and len(resp_text) < 500: speak_text( resp_text, italian_voice )
 
-    if input_line != '': break
+    if input_s != '': break
