@@ -2,8 +2,8 @@
 #
 import sys
 
-start_price  = 230
-start_mktcap = 678.88 * 230/274.85
+start_price  = 23.00
+start_mktcap = 678.88 * start_price/27.49
 start_year   = 2023
 growth_rate  = 1.07      # quarterly
 year_cnt     = 10
