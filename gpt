@@ -121,6 +121,14 @@ elif context == 'french_translations':
     context = "Here some definitions. Each definition has a line of English and a line of Italian. Please add a 3rd line to each definition that shows the French translation:\n"
     is_multi_line = True
 
+elif context == 'spanish_translations':
+    context = "Here some definitions. Each definition has a line of English and a line of Italian. Please add a 3rd line to each definition that shows the Spanish translation:\n"
+    is_multi_line = True
+
+elif context == 'french_spanish_translations':
+    context = "Here some definitions. Each definition has a line of English and a line of Italian. Please add a 3rd line to each definition that shows the French translation and a 4th line that shows the Spanish translation:\n"
+    is_multi_line = True
+
 elif context != '':
     die( f'unknown context: {context}' )
 
