@@ -52,6 +52,7 @@ export cvp=$c/vpy
 export cfp=$c/flightplan
 export cfs=$c/flightsim
 export i=$d/Italian
+export ic=$d/Italian/Certificazioni
 export m=$d/Manuals
 export ma=$d/Manuals/Aviation
 export mam=$d/Manuals/Aviation/Medical
