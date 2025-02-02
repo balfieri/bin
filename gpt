@@ -6,7 +6,7 @@ import os
 import sys
 import subprocess
 
-import openai
+from openai import OpenAI
 import whisper
 
 cmd_en = True
@@ -81,11 +81,11 @@ while i < len(sys.argv):
         die( f'unknown option: {arg}' )
 
 if site == 'openai':
-    openai.api_key = os.getenv( 'OPENAI_API_KEY' )
+    client = OpenAI( api_key  = os.getenv( 'OPENAI_API_KEY' ) )
     if model == '': model = 'gpt-4o'
 elif site == 'perplexity':
-    openai.api_key = os.getenv( 'PERPLEXITY_API_KEY' )
-    base_url = 'https://api.perplexity.ai'
+    client = OpenAI( api_key  = os.getenv( 'PERPLEXITY_API_KEY' ),
+                     base_url = 'https://api.perplexity.ai' )
     if model == '': model = 'sonar-pro'
 else:
     die( f'unknown site: {site}' )
@@ -126,7 +126,7 @@ def speak_text( text, voice ):
         file.write( text )
     cmd( f'say -f gpt_text.txt -v {voice} -r {voice_rate}', False, False )
 
-messages=[ {'role': 'system', 'content': 'Ask me anything.'} ]
+messages=[]
 if context == 'translations':
     context = 'Here are some phrases in either English or Italian. For each phrase, please output a pair of lines. The first line always shows the English translation. The second line always shows the Italian translation. Then add a blank line after those two lines. That should be the order regardless of whether the original phrase is in English or Italian. If you\'d like to list a couple English/Italian translations, that\'s fine, just separate them with semicolons; And please do not translate anything that I didn\'t ask to be translated - the final number of translations should be equal to the number of lines I gave you. Finally, please do not capitalize words unless they are always capitalized. So to summarize, for each phrase your output should be:\n<English translations separate by semicolons>\n<Italian translations separated by semicolons\nHere are my phrases. Again only translate these and don\'t add others:\n' 
     is_multi_line = True
@@ -169,7 +169,7 @@ while True:
     messages.append( {'role': 'user', 'content': prompt} )
     print( '-----------------------------------\n' )
 
-    response = openai.ChatCompletion.create(
+    response = client.chat.completions.create(
         model=model,
         messages=messages,
         max_tokens=1024,
@@ -179,7 +179,7 @@ while True:
         frequency_penalty=0.0,
         presence_penalty=0.6,
     )
-    resp = response['choices'][0]['message']['content']
+    resp = response.choices[0].message.content
     messages.append( {'role': 'assistant', 'content': resp} )
     print( f'{resp}' )
     if input_s == '': print( '-----------------------------------\n' )
