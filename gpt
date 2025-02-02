@@ -31,7 +31,8 @@ def file_read( file_name ):
         data = my_file.read()
     return data
 
-site             = 'openai'
+#site             = 'openai'
+site             = 'perplexity'
 model            = ''
 context          = ''
 is_multi_line    = False
