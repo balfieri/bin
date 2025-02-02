@@ -83,10 +83,12 @@ while i < len(sys.argv):
 if site == 'openai':
     client = OpenAI( api_key  = os.getenv( 'OPENAI_API_KEY' ) )
     if model == '': model = 'gpt-4o'
+    max_tokens = 2048
 elif site == 'perplexity':
     client = OpenAI( api_key  = os.getenv( 'PERPLEXITY_API_KEY' ),
                      base_url = 'https://api.perplexity.ai' )
     if model == '': model = 'sonar-pro'
+    max_tokens = 2048
 else:
     die( f'unknown site: {site}' )
 
@@ -172,12 +174,7 @@ while True:
     response = client.chat.completions.create(
         model=model,
         messages=messages,
-        max_tokens=1024,
-        n=1,
-        temperature=0.5,
-        top_p=1,
-        frequency_penalty=0.0,
-        presence_penalty=0.6,
+        max_tokens=max_tokens,
     )
     resp = response.choices[0].message.content
     messages.append( {'role': 'assistant', 'content': resp} )
