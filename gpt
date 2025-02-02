@@ -31,8 +31,8 @@ def file_read( file_name ):
         data = my_file.read()
     return data
 
-openai.api_key   = os.getenv( 'OPENAI_API_KEY' )
-model            = 'gpt-4o'
+site             = 'openai'
+model            = ''
 context          = ''
 is_multi_line    = False
 input_s          = ''
@@ -46,7 +46,10 @@ i = 1
 while i < len(sys.argv):
     arg = sys.argv[i]
     i += 1
-    if   arg == '-m':
+    if   arg == '-s' or arg == '-site':
+        site = sys.argv[i]
+        i += 1
+    elif arg == '-m' or arg == '-model':
         model = sys.argv[i]
         i += 1
     elif arg == '-c':
@@ -77,7 +80,17 @@ while i < len(sys.argv):
     else:
         die( f'unknown option: {arg}' )
 
-wmodel = whisper.load_model( "base" )
+if site == 'openai':
+    openai.api_key = os.getenv( 'OPENAI_API_KEY' )
+    if model == '': model = 'gpt-4o'
+elif site == 'perplexity':
+    openai.api_key = os.getenv( 'PERPLEXITY_API_KEY' )
+    base_url = 'https://api.perplexity.ai'
+    if model == '': model = 'sonar-pro'
+else:
+    die( f'unknown site: {site}' )
+
+wmodel = None
 
 def prompt_read( prefix, is_multi_line ):
     prompt = input( prefix )
@@ -95,6 +108,7 @@ def record_audio( always_submit ):
         cmd( f'rm -f {audio_file_path}', False )
         cmd( f'rec {audio_file_path} silence 1 0.1 3% 1 {recording_dead_time} 3%', False, False )
         print( f'Transcribing text...\n' )
+        if not wmodel: wmodel = whisper.load_model( "base" )
         result = wmodel.transcribe( audio_file_path, fp16=False )
         transcribed_text = result['text'] 
         print( f'{transcribed_text}\n' )
