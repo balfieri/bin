@@ -154,6 +154,8 @@ alias gw1='cd $cst; grit_words.py -file words1.out -one_per_line 1 >& grit1.out;
 alias sit='cd $cst; ./talk.py'
 alias sayi='say -v Alice -r 120'
 alias sayf='say -v Thomas -r 120'
+alias dtl='TZ=Europe/London date'
+alias dtu=date -u
 alias e=env
 alias eg='env | grep'
 alias h=history
