@@ -156,7 +156,7 @@ alias sit='cd $cst; ./talk.py'
 alias sayi='say -v Alice -r 120'
 alias sayf='say -v Thomas -r 120'
 alias dtl='TZ=Europe/London date'
-alias dtu=date -u
+alias dtu='date -u'
 alias e=env
 alias eg='env | grep'
 alias h=history
@@ -215,6 +215,7 @@ alias dn1='denon vol_down1'
 alias dn2='denon vol_down2'
 alias atv='atvremote -n "Family Room" --mrp-credentials `cat ~/mrp_fr_creds` cli'
 alias py='${PYTHON}'
+alias cut1='cut -d " " -f 1'
 
 # calc function shorthands
 function f2c()  { calc "f2c($1)"; }
@@ -236,10 +237,10 @@ function cagr() { calc "cagr($1, $2, $3)"; }
 function fv()   { calc "fv($1, $2, $3)"; }
 function pv()   { calc "pv($1, $2, $3)"; }
 function lfv()  { calc "lfv($1, $2, $3, $4)"; }
-function dsw() { calc "dayssince('30 06 2025')"; }
-function cmileage() { calc "($1-64280)*365/(dayssince('10 02 2024'))"; }
-function pmileage() { calc "($1-125891)*365/(dayssince('10 02 2024'))"; }
-function vmileage() { calc "($1-4053)*365/(dayssince('10 02 2024'))"; }
+function dsw() { calc "dayssince('01 08 2025')" | cut1; }
+function cmileage() { calc "($1-64280)*365/(dayssince('10 02 2024'))"  | cut1; }
+function pmileage() { calc "($1-125891)*365/(dayssince('10 02 2024'))" | cut1; }
+function vmileage() { calc "($1-4053)*365/(dayssince('10 02 2024'))"   | cut1; }
 
 # copying to/from other machines or running a command on them
 function fm() { scp -r ${1}:${2} ${3}; }
