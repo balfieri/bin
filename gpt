@@ -40,6 +40,7 @@ input_s          = ''
 recording_dead_time = 3.0
 english_voice    = 'Samantha'
 italian_voice    = 'Alice'
+french_voice     = 'Thomas'
 voice_rate       = 190
 is_italian_convo = False
 
@@ -71,6 +72,9 @@ while i < len(sys.argv):
         i += 1
     elif arg == '-italian_voice':
         italian_voice = sys.argv[i]
+        i += 1
+    elif arg == '-french_voice':
+        french_voice = sys.argv[i]
         i += 1
     elif arg == '-is_italian_convo':
         is_italian_convo = int( sys.argv[i] )
