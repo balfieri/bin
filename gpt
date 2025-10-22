@@ -134,20 +134,18 @@ def speak_text( text, voice ):
     cmd( f'say -f gpt_text.txt -v {voice} -r {voice_rate}', False, False )
 
 messages=[]
-if context == 'italian_translations':
-    context = 'Here are some phrases in either English or Italian. For each phrase, please output a pair of lines. The first line always shows the English translation. The second line always shows the Italian translation. Then add a blank line after those two lines. That should be the order regardless of whether the original phrase is in English or Italian. If you\'d like to list a couple English/Italian translations, that\'s fine, just separate them with semicolons; And please do not translate anything that I didn\'t ask to be translated - the final number of translations should be equal to the number of lines I gave you. Finally, please do not capitalize words unless they are always capitalized. So to summarize, for each phrase your output should be:\n<English translations separate by semicolons>\n<Italian translations separated by semicolons\nPlease don\'t add any weird characters before or after each line of your response.\nHere are my phrases. Again only translate these and don\'t add others:\n' 
-    is_multi_line = True
+translations_info = {
+    'italian_translations':    [ 'Italian'    ],
+    'french_translations':     [ 'French'     ],
+    'spanish_translations':    [ 'Spanish'    ],
+    'portuguese_translations': [ 'Portuguese' ],
+    'german_translations':     [ 'German'     ],
+    }
 
-elif context == 'french_translations':
-    context = 'Here are some phrases in either English or French. For each phrase, please output a pair of lines. The first line always shows the English translation. The second line always shows the French translation. Then add a blank line after those two lines. That should be the order regardless of whether the original phrase is in English or French. If you\'d like to list a couple English/French translations, that\'s fine, just separate them with semicolons; And please do not translate anything that I didn\'t ask to be translated - the final number of translations should be equal to the number of lines I gave you. Finally, please do not capitalize words unless they are always capitalized. So to summarize, for each phrase your output should be:\n<English translations separate by semicolons>\n<French translations separated by semicolons\nPlease don\'t add any weird characters before or after each line of your response.\nHere are my phrases. Again only translate these and don\'t add others:\n' 
-    is_multi_line = True
-
-elif context == 'spanish_translations':
-    context = "Here some definitions. Each definition has a line of English and a line of Italian. Please add a 3rd line to each definition that shows the Spanish translation:\n"
-    is_multi_line = True
-
-elif context == 'french_spanish_translations':
-    context = "Here some definitions. Each definition has a line of English and a line of Italian. Please add a 3rd line to each definition that shows the French translation and a 4th line that shows the Spanish translation:\n"
+if context in translations_info:
+    info = translations_info[context]
+    Language = info[0]
+    context = f'Here are some phrases in either English or {Language}. For each phrase, please output a pair of lines. The first line always shows the English translation. The second line always shows the {Language} translation. Then add a blank line after those two lines. That should be the order regardless of whether the original phrase is in English or {Language}. If you\'d like to list a couple English/{Language} translations, that\'s fine, just separate them with semicolons; And please do not translate anything that I didn\'t ask to be translated - the final number of translations should be equal to the number of lines I gave you. Finally, please do not capitalize words unless they are always capitalized. So to summarize, for each phrase your output should be:\n<English translations separate by semicolons>\n<{Language} translations separated by semicolons\nPlease don\'t add any weird characters before or after each line of your response.\nHere are my phrases. Again only translate these and don\'t add others:\n' 
     is_multi_line = True
 
 elif context != '':
