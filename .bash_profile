@@ -168,7 +168,8 @@ alias grfts='cd $cst; ./grit.py -l french -v Amélie -s 1 -lu 1 -subjects $fr_s'
 alias gwf='cd $cst; grit_words.py -subjects $fr_s -file wordsf.out -one_per_line 1 >& gritf.out; vi gritf.out'
 alias fdft='cd $cst; ./find_dups.py $fr_s'
 alias sayf='say -v Amélie -r 120'
-alias ftw='cd $cst; ./doit.www'
+
+alias www='cd $cst; ./doit.www'
 
 alias dtl='TZ=Europe/London date'
 alias dtu='date -u'
