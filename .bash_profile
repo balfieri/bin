@@ -169,8 +169,6 @@ alias gwf='cd $cst; grit_words.py -subjects $fr_s -file wordsf.out -one_per_line
 alias fdft='cd $cst; ./find_dups.py $fr_s'
 alias sayf='say -v Amélie -r 120'
 
-alias www='cd $cst; ./doit.www'
-
 alias dtl='TZ=Europe/London date'
 alias dtu='date -u'
 alias e=env
