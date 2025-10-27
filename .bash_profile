@@ -60,7 +60,10 @@ export mam=$d/Manuals/Aviation/Medical
 export mr=$d/Manuals/RT
 export w=$d/Websites
 export wc=$w/imustcook.com
+export av_s=aviation_vfr,aviation_ifr
+export it_voice=Alice
 export it_s=italian_basic,italian_advanced,italian_expressions,italian_american_expressions,italian_vulgar,italian_passato_remoto,italian_tongue_twisters
+export fr_voice=Amélie
 export fr_s=french_basic,french_advanced,french_expressions,french_american_expressions,french_vulgar
 
 alias gs='git status'
@@ -144,11 +147,11 @@ alias itt='cd $cst; ./run.py italian_tongue_twisters -q 0 -ps 4 -cat ""'
 alias itv='cd $cst; ./run.py italian_vulgar -q 0 -ps 4 -cat ""'
 alias itpr='cd $cst; ./run.py italian_passato_remoto -q 0 -ps 4 -cat ""'
 alias it='cd $cst;  ./run.py $it_s -q 0 -ps 1 -cat ""'
-alias grit='cd $cst; ./grit.py -l italian -v Alice -s 0 -lu 1 -subjects $it_s'
-alias grits='cd $cst; ./grit.py -l italian -v Alice -s 1 -lu 1 -subjects $it_s'
+alias grit='cd $cst; ./grit.py -l italian -v $it_voice -s 0 -lu 1 -subjects $it_s'
+alias grits='cd $cst; ./grit.py -l italian -v $it_voice -s 1 -lu 1 -subjects $it_s'
 alias gwi='cd $cst; grit_words.py -subjects $it_s -file wordsi.out -one_per_line 1 >& griti.out; vi griti.out'
 alias fdit='cd $cst; ./find_dups.py $it_s'
-alias sayi='say -v Alice -r 120'
+alias sayi='say -v $it_voice -r 120'
 
 alias vfw='cd $cst; vi wordsf.out'
 alias vfg='cd $cst; vi gritf.out'
@@ -163,11 +166,11 @@ alias ftae='cd $cst; ./run.py french_american_expressions -q 0 -ps 2 -cat ""'
 alias fte='cd $cst; ./run.py french_expressions -q 0 -ps 4 -cat ""'
 alias ftv='cd $cst; ./run.py french_vulgar -q 0 -ps 4 -cat ""'
 alias ft='cd $cst;  ./run.py $fr_s -q 0 -ps 1 -cat ""'
-alias grft='cd $cst; ./grit.py -l french -v Amélie -s 0 -lu 1 -subjects $fr_s'
-alias grfts='cd $cst; ./grit.py -l french -v Amélie -s 1 -lu 1 -subjects $fr_s'
+alias grft='cd $cst; ./grit.py -l french -v $fr_voice -s 0 -lu 1 -subjects $fr_s'
+alias grfts='cd $cst; ./grit.py -l french -v $fr_voice -s 1 -lu 1 -subjects $fr_s'
 alias gwf='cd $cst; grit_words.py -subjects $fr_s -file wordsf.out -one_per_line 1 >& gritf.out; vi gritf.out'
 alias fdft='cd $cst; ./find_dups.py $fr_s'
-alias sayf='say -v Amélie -r 120'
+alias sayf='say -v $fr_voice -r 120'
 
 alias dtl='TZ=Europe/London date'
 alias dtu='date -u'
