@@ -63,7 +63,7 @@ export wc=$w/imustcook.com
 export av_s=aviation_vfr,aviation_ifr
 export it_voice=Alice
 export it_s=italian_basic,italian_advanced,italian_expressions,italian_american_expressions,italian_vulgar,italian_passato_remoto,italian_tongue_twisters
-export fr_voice=Amélie
+export fr_voice=Thomas
 export fr_s=french_basic,french_advanced,french_expressions,french_american_expressions,french_vulgar
 
 alias gs='git status'
