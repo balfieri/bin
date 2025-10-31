@@ -147,6 +147,7 @@ alias igrt='cd $cst; ./grit.py -l italian -v $it_voice -s 0 -lu 1 -subjects $it_
 alias igrts='cd $cst; ./grit.py -l italian -v $it_voice -s 1 -lu 1 -subjects $it_s'
 alias igw='cd $cst; grit_words.py -subjects $it_s -file iwords.out -one_per_line 1 >& igrit.out; vi igrit.out'
 alias igptt='gpt -c italian_translations -i'
+alias igpttw='cd $cst; gpt -c italian_translations -f iwords.out'
 alias ifdt='cd $cst; ./find_dups.py $it_s'
 alias isay='say -v $it_voice -r 120'
 
@@ -167,6 +168,7 @@ alias fgrt='cd $cst; ./grit.py -l french -v $fr_voice -s 0 -lu 1 -subjects $fr_s
 alias fgrts='cd $cst; ./grit.py -l french -v $fr_voice -s 1 -lu 1 -subjects $fr_s'
 alias fgw='cd $cst; grit_words.py -subjects $fr_s -file fwords.out -one_per_line 1 >& fgrit.out; vi fgrit.out'
 alias fgptt='gpt -c french_translations -i'
+alias fgpttw='cd $cst; gpt -c french_translations -f fwords.out'
 alias ffdt='cd $cst; ./find_dups.py $fr_s'
 alias fsay='say -v $fr_voice -r 120'
 
