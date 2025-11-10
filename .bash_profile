@@ -176,7 +176,7 @@ alias fgpttw='cd $cst; gpt -c french_translations -f fwords.out'
 alias ffdt='cd $cst; ./find_dups.py $fr_s'
 alias fsay='say -v $fr_voice -r 120'
 alias fmf='gpt1 tell me in exectly one word if this word is masculine or feminine in French: '
-alias fcv='gpt1 conjugate the following French verbs in present, imparfait, passé compose, futur, conditional, subjonctif: '
+alias fcv='gpt1 conjugate the following French verbs in present, imparfait, passé composé, futur, conditionnel, subjonctif: '
 
 alias dtl='TZ=Europe/London date'
 alias dtu='date -u'
