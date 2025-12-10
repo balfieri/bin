@@ -61,10 +61,13 @@ export mr=$d/Manuals/RT
 export w=$d/Websites
 export wc=$w/imustcook.com
 export av_s=aviation_vfr,aviation_ifr
+export en_voice=Samantha
 export it_voice=Alice
 export it_s=italian_basic,italian_advanced,italian_expressions,italian_american_expressions,italian_vulgar,italian_passato_remoto,italian_tongue_twisters
 export fr_voice=Thomas
 export fr_s=french_basic,french_advanced,french_expressions,french_american_expressions,french_vulgar
+
+alias cut1='cut -d " " -f 1'
 
 alias gs='git status'
 alias ga='git add --all; git status'
@@ -120,11 +123,14 @@ alias s3='aws s3'
 alias cona='conda activate'
 alias cond='conda deactivate'
 
-alias ppl='cd $cst; ./run.py aviation -q 0 -ps 2'
+alias vfr='cd $cst; ./run.py aviation_vfr -q 0 -ps 2'
+alias vfrs='cd $cst; ./run.py aviation_vfr -q 0 -ps 2 -s 1 -av $en_voice -qr 180'
 alias ifr='cd $cst; ./run.py aviation_ifr -q 0 -ps 2'
-alias ifrs='cd $cst; ./run.py aviation_ifr -q 0 -ps 0 -s 1 -av Samantha -qr 180'
-alias vppl='cd $cst; vi aviation.txt'
+alias ifrs='cd $cst; ./run.py aviation_ifr -q 0 -ps 0 -s 1 -av $en_voice -qr 180'
+alias vvfr='cd $cst; vi aviation_vfr.txt'
 alias vifr='cd $cst; vi aviation_ifr.txt'
+
+alias esay='say -v $en_voice'
 
 alias ivw='cd $cst; vi iwords.out'
 alias ivg='cd $cst; vi igrit.out'
@@ -144,9 +150,9 @@ alias itv='cd $cst; ./run.py italian_vulgar -q 0 -ps 4 -cat ""'
 alias itpr='cd $cst; ./run.py italian_passato_remoto -q 0 -ps 4 -cat ""'
 alias it='cd $cst;  ./run.py $it_s -q 0 -ps 1 -cat ""'
 alias its='cd $cst;  ./run.py $it_s -q 0 -ps 1 -cat "" -s 1 -av $it_voice'
-alias ig='cd $cst; ./grit.py -l italian -v $it_voice -s 0 -lu 1 -subjects $it_s'
-alias igs='cd $cst; ./grit.py -l italian -v $it_voice -s 1 -lu 1 -subjects $it_s'
-alias igw='cd $cst; grit_words.py -subjects $it_s -file iwords.out -one_per_line 1 >& igrit.out; vi igrit.out'
+alias igr='cd $cst; ./grit.py -l italian -v $it_voice -s 0 -lu 1 -subjects $it_s'
+alias igrs='cd $cst; ./grit.py -l italian -v $it_voice -s 1 -lu 1 -subjects $it_s'
+alias igrw='cd $cst; grit_words.py -subjects $it_s -file iwords.out -one_per_line 1 >& igrit.out; vi igrit.out'
 alias igptt='gpt -c italian_translations -i'
 alias igpttw='cd $cst; gpt -c italian_translations -f iwords.out'
 alias ifdt='cd $cst; ./find_dups.py $it_s'
@@ -154,8 +160,8 @@ alias isay='say -v $it_voice -r 120'
 alias imf='gpt1 tell me in exactly one word if this word is masculine or feminine in Italian: '
 alias icv='gpt1 conjugate the following Italian verbs in presente, imperfetto, passato prossimo, passato remoto, futuro, condizionale, congiuntivo, imperfetto congiuntivo: '
 alias itf='gpt1 traduci queste parole francesi in italiano: '
-function idsw() { calc "dayssince('09 09 2025')" | cut1; }
-function idsww() { calc `dsw`*25 | cut1; }
+function idsw() { calc "dayssince('16 11 2025')" | cut1; }
+function idsww() { calc `idsw`*25 | cut1; }
 
 alias fvw='cd $cst; vi fwords.out'
 alias fvg='cd $cst; vi fgrit.out'
@@ -171,9 +177,9 @@ alias fte='cd $cst; ./run.py french_expressions -q 0 -ps 4 -cat ""'
 alias ftv='cd $cst; ./run.py french_vulgar -q 0 -ps 4 -cat ""'
 alias ft='cd $cst;  ./run.py $fr_s -q 0 -ps 1 -cat ""'
 alias fts='cd $cst;  ./run.py $fr_s -q 0 -ps 1 -cat "" -s 1 -av $fr_voice'
-alias fg='cd $cst; ./grit.py -l french -v $fr_voice -s 0 -lu 1 -subjects $fr_s'
-alias fgs='cd $cst; ./grit.py -l french -v $fr_voice -s 1 -lu 1 -subjects $fr_s'
-alias fgw='cd $cst; grit_words.py -subjects $fr_s -file fwords.out -one_per_line 1 >& fgrit.out; vi fgrit.out'
+alias fgr='cd $cst; ./grit.py -l french -v $fr_voice -s 0 -lu 1 -subjects $fr_s'
+alias fgrs='cd $cst; ./grit.py -l french -v $fr_voice -s 1 -lu 1 -subjects $fr_s'
+alias fgrw='cd $cst; grit_words.py -subjects $fr_s -file fwords.out -one_per_line 1 >& fgrit.out; vi fgrit.out'
 alias fgptt='gpt -c french_translations -i'
 alias fgpttw='cd $cst; gpt -c french_translations -f fwords.out'
 alias ffdt='cd $cst; ./find_dups.py $fr_s'
@@ -181,8 +187,8 @@ alias fsay='say -v $fr_voice -r 120'
 alias fmf='gpt1 tell me in exectly one word if this word is masculine or feminine in French: '
 alias fcv='gpt1 conjugate the following French verbs in present, imparfait, passé composé, futur, conditionnel, subjonctif: '
 alias fti='gpt1 traduis ces mots italiens en français: '
-function fdsw() { calc "dayssince('14 11 2025')" | cut1; }
-function fdsww() { calc `dsw`*25 | cut1; }
+function fdsw() { calc "dayssince('10 12 2025')" | cut1; }
+function fdsww() { calc `fdsw`*25 | cut1; }
 
 alias dtl='TZ=Europe/London date'
 alias dtu='date -u'
@@ -206,7 +212,7 @@ alias ll='ls -AlG'
 alias lt='ls -Alt'
 alias ltl='ls -Alt | less'
 alias c=calc
-alias fgr='find . -depth -print | grep'
+alias fgp='find . -depth -print | grep'
 alias psg='ps -ef | grep ${USER} | grep'
 alias mkc="make clean"
 alias vmo='vi make.out'
@@ -244,7 +250,6 @@ alias dn1='denon vol_down1'
 alias dn2='denon vol_down2'
 alias atv='atvremote -n "Family Room" --mrp-credentials `cat ~/mrp_fr_creds` cli'
 alias py='${PYTHON}'
-alias cut1='cut -d " " -f 1'
 
 # calc function shorthands
 function f2c()  { calc "f2c($1)"; }
