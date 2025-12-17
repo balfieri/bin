@@ -160,6 +160,7 @@ alias isay='say -v $it_voice -r 120'
 alias imf='gpt1 tell me in exactly one word if this word is masculine or feminine in Italian: '
 alias icv='gpt1 conjugate the following Italian verbs in presente, imperfetto, passato prossimo, passato remoto, futuro, condizionale, congiuntivo, imperfetto congiuntivo: '
 alias itf='gpt1 traduci queste parole francesi in italiano: '
+alias icr='gpt1 correggi questo italiano, ma non aggiungere asterischi intorno alla correzione: '
 function idsw() { calc "dayssince('16 11 2025')" | cut1; }
 function idsww() { calc `idsw`*25 | cut1; }
 
@@ -186,6 +187,7 @@ alias ffdt='cd $cst; ./find_dups.py $fr_s'
 alias fsay='say -v $fr_voice -r 120'
 alias fmf='gpt1 tell me in exectly one word if this word is masculine or feminine in French: '
 alias fcv='gpt1 conjugate the following French verbs in present, imparfait, passé composé, futur, conditionnel, subjonctif: '
+alias fcr='gpt1 corrige ce français, mais ne pas ajouter d''astérisques autour de ta correction \(please do not add asterisks!\): ' 
 alias fti='gpt1 traduis ces mots italiens en français: '
 function fdsw() { calc "dayssince('10 12 2025')" | cut1; }
 function fdsww() { calc `fdsw`*25 | cut1; }
@@ -296,3 +298,5 @@ killall gpg-agent >& /dev/null
 gpg-agent --daemon >& /dev/null
 
 dd
+
+
