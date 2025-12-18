@@ -5,6 +5,9 @@ set -o vi
 
 export BASH_SILENCE_DEPRECATION_WARNING=1
 export PS1='\[\e[1;33m\w) \e[m\]'
+export LANG=en_US.UTF-8
+export LC_CTYPE=en_US.UTF-8
+export LC_ALL=en_US.UTF-8
 
 if [ -f ~/.openai_key.txt ]; then
     export OPENAI_API_KEY=`cat ~/.openai_key.txt`
