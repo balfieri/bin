@@ -195,6 +195,17 @@ alias fti='gpt1 traduis ces mots italiens en français: '
 function fdsw() { calc "dayssince('10 12 2025')" | cut1; }
 function fdsww() { calc `fdsw`*25 | cut1; }
 
+alias mdf0='cd $cst; ./memdeck.py -fq 0'
+alias mdf1='cd $cst; ./memdeck.py -fq 1'
+alias mdf2='cd $cst; ./memdeck.py -fq 2'
+alias mdf3='cd $cst; ./memdeck.py -fq 3'
+alias mdrc='cd $cst; ./memdeck.py -randc 52' 
+alias mdrq='cd $cst; ./memdeck.py -randq 52' 
+alias mdrn='cd $cst; ./memdeck.py -randn 52' 
+alias mdrc26='cd $cst; ./memdeck.py -randc 26 -de 26' 
+alias mdrq26='cd $cst; ./memdeck.py -randq 26 -de 26' 
+alias mdrn26='cd $cst; ./memdeck.py -randn 26 -de 26' 
+
 alias dtl='TZ=Europe/London date'
 alias dtu='date -u'
 alias e=env
