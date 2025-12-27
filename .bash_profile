@@ -132,6 +132,8 @@ alias ifr='cd $cst; ./run.py aviation_ifr -q 0 -ps 2'
 alias ifrs='cd $cst; ./run.py aviation_ifr -q 0 -ps 0 -s 1 -av $en_voice -qr 180'
 alias vvfr='cd $cst; vi aviation_vfr.txt'
 alias vifr='cd $cst; vi aviation_ifr.txt'
+alias vacr='cd $cst; grep acronym aviation_vfr.txt'
+alias iacr='cd $cst; grep acronym aviation_ifr.txt'
 
 alias esay='say -v $en_voice'
 
