@@ -126,14 +126,17 @@ alias s3='aws s3'
 alias cona='conda activate'
 alias cond='conda deactivate'
 
-alias vfr='cd $cst; ./run.py aviation_vfr -q 0 -ps 2'
+alias vfrp='cd $cst; ./run.py aviation_vfr -q 0 -ps 2'
 alias vfrs='cd $cst; ./run.py aviation_vfr -q 0 -ps 2 -s 1 -av $en_voice -qr 180'
-alias ifr='cd $cst; ./run.py aviation_ifr -q 0 -ps 2'
+alias vfrv='cd $cst; vi aviation_vfr.txt'
+alias vfrg='cd $cst; grit.py -subjects aviation_vfr'
+alias vfra='cd $cst; grep acronym aviation_vfr.txt'
+
+alias ifrp='cd $cst; ./run.py aviation_ifr -q 0 -ps 2'
 alias ifrs='cd $cst; ./run.py aviation_ifr -q 0 -ps 0 -s 1 -av $en_voice -qr 180'
-alias vvfr='cd $cst; vi aviation_vfr.txt'
-alias vifr='cd $cst; vi aviation_ifr.txt'
-alias vacr='cd $cst; grep acronym aviation_vfr.txt'
-alias iacr='cd $cst; grep acronym aviation_ifr.txt'
+alias ifrv='cd $cst; vi aviation_ifr.txt'
+alias ifrg='cd $cst; grit.py -subjects aviation_ifr'
+alias ifra='cd $cst; grep acronym aviation_ifr.txt'
 
 alias esay='say -v $en_voice'
 
