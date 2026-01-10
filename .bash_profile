@@ -200,7 +200,10 @@ alias fti='gpt1 traduis ces mots italiens en français: '
 function fdsw() { calc "dayssince('10 12 2025')" | cut1; }
 function fdsww() { calc `fdsw`*25 | cut1; }
 
+alias fdt='ifdt; ffdt'
+
 alias mdp='cd $cst; ./memdeck.py -pd 1' 
+alias mdrd='cd $cst; ./memdeck.py -rd 1 -pd 1'
 alias mdf0='cd $cst; ./memdeck.py -fq 0'
 alias mdf1='cd $cst; ./memdeck.py -fq 1'
 alias mdf2='cd $cst; ./memdeck.py -fq 2'
