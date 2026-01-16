@@ -290,6 +290,8 @@ function m2i()  { calc "m2i($1)"; }
 function f2m()  { calc "f2m($1)"; }
 function m2f()  { calc "m2f($1)"; }
 function bmi()  { calc "bmi(p2k($1), i2m(71))"; }
+function h2i()  { calc "h2i($1)"; }
+function i2h()  { calc "i2h($1)"; }
 function nv2mc() { calc "nv2mc($1)"; }
 function mc2nv() { calc "mc2nv($1)"; }
 function cagr() { calc "cagr($1, $2, $3)"; }

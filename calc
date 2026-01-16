@@ -21,6 +21,8 @@ def m2i( m ):   return m / 0.0254
 def f2m( f ):   return i2m( 12* n )
 def m2f( m ):   return m2i( m ) / 12.0
 def bmi( w, h ):return w / (h*h)
+def h2i( h ):   return h * 0.02953;
+def i2h( i ):   return i / 0.02953;
 
 def cagr( BV, EV, N ): return ((EV/BV)**(1./N) - 1.0) * 100.0  # BV=beginning value, EV=ending value, N=num years
 def fv( PV, R, N ):    return PV * (1.0 + R/100.0)**N          
