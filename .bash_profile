@@ -169,7 +169,7 @@ alias imf='gpt1 tell me in exactly one word if this word is masculine or feminin
 alias icv='gpt1 conjugate the following Italian verbs in presente, imperfetto, passato prossimo, passato remoto, futuro, condizionale, congiuntivo, imperfetto congiuntivo: '
 alias itf='gpt1 traduci queste parole francesi in italiano: '
 alias icr='gpt1 correggi questo italiano, ma non aggiungere asterischi intorno alla correzione: '
-function idsw() { calc "dayssince('16 11 2025')" | cut1; }
+function idsw() { calc "dayssince('04 03 2026')" | cut1; }
 function idsww() { calc `idsw`*25 | cut1; }
 
 alias fvw='cd $cst; vi fwords.out'
@@ -312,7 +312,7 @@ function ons1() { on ${SERVER1_USER}@${SERVER1} $@; }
 
 # paths
 export DYLD_LIBRARY_PATH=/usr/local/opt/openssl/lib:$DYLD_LIBRARY_PATH
-export PATH=.:/bin:/usr/local/bin:/usr/bin:/sbin:${b}:${AWS_HOME}
+export PATH=.:/bin:/usr/local/bin:/usr/bin:/sbin:/opt/homebrew/bin:${b}:${AWS_HOME}
 export PYTHON=python3
 
 # start up gpg-agent (needed even for symmetric keys using only a passphrase)
