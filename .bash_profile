@@ -197,7 +197,7 @@ alias fmf='gpt1 tell me in exectly one word if this word is masculine or feminin
 alias fcv='gpt1 conjugate the following French verbs in present, imparfait, passé composé, futur, conditionnel, subjonctif: '
 alias fcr='gpt1 corrige ce français, mais ne pas ajouter d''astérisques autour de ta correction \(please do not add asterisks!\): ' 
 alias fti='gpt1 traduis ces mots italiens en français: '
-function fdsw() { calc "dayssince('01 02 2026')" | cut1; }
+function fdsw() { calc "dayssince('12 03 2026')" | cut1; }
 function fdsww() { calc `fdsw`*25 | cut1; }
 
 alias fdt='ifdt; ffdt'
