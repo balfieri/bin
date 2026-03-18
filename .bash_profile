@@ -65,9 +65,11 @@ export w=$d/Websites
 export wc=$w/imustcook.com
 export av_s=aviation_vfr,aviation_ifr
 export en_voice=Samantha
+export it_lang_code=it-IT
 export it_voice=Alice
 export it_s=italian_basic,italian_advanced,italian_expressions,italian_american_expressions,italian_vulgar,italian_passato_remoto,italian_tongue_twisters
-export fr_voice=Thomas
+export fr_lang_code=fr-CA
+export fr_voice=Amélie
 export fr_s=french_basic,french_advanced,french_expressions,french_american_expressions,french_vulgar
 
 alias cut1='cut -d " " -f 1'
@@ -301,6 +303,7 @@ function lfv()  { calc "lfv($1, $2, $3, $4)"; }
 function cmileage() { calc "($1-64280)*365/(dayssince('10 02 2024'))"  | cut1; }
 function pmileage() { calc "($1-125891)*365/(dayssince('10 02 2024'))" | cut1; }
 function vmileage() { calc "($1-4053)*365/(dayssince('10 02 2024'))"   | cut1; }
+function duw()  { calc "daysuntil('03 07 2027')" | cut1; }
 
 # copying to/from other machines or running a command on them
 function fm() { scp -r ${1}:${2} ${3}; }

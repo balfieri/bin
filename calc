@@ -46,6 +46,7 @@ def date():
     return now.strftime( '%d %m %Y' )
 
 def dayssince( date_s ): return (d2s( date() ) - d2s( date_s )) / (3600*24)
+def daysuntil( date_s ): return -dayssince( date_s )
 
 expr = ' '.join( sys.argv[1:] )
 v    = eval( expr )
