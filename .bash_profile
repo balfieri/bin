@@ -71,6 +71,9 @@ export it_s=italian_basic,italian_advanced,italian_expressions,italian_american_
 export fr_lang_code=fr-CA
 export fr_voice=Amélie
 export fr_s=french_basic,french_advanced,french_expressions,french_american_expressions,french_vulgar
+export sp_lang_code=es-ES
+export sp_voice=Mónica
+export sp_s=spanish_basic,spanish_advanced,spanish_expressions,spanish_american_expressions,spanish_vulgar
 
 alias cut1='cut -d " " -f 1'
 
@@ -202,7 +205,35 @@ alias fti='gpt1 traduis ces mots italiens en français: '
 function fdsw() { calc "dayssince('12 03 2026')" | cut1; }
 function fdsww() { calc `fdsw`*25 | cut1; }
 
-alias fdt='ifdt; ffdt'
+alias svw='cd $cst; vi swords.out'
+alias svg='cd $cst; vi sgrit.out'
+alias svtb='cd $cst; vi spanish_basic.txt'
+alias svta='cd $cst; vi spanish_advanced.txt'
+alias svte='cd $cst; vi spanish_expressions.txt'
+alias svtae='cd $cst; vi spanish_american_expressions.txt'
+alias svtv='cd $cst; vi spanish_vulgar.txt'
+alias stb='cd $cst; ./run.py spanish_basic -q 0 -ps 2 -cat ""'
+alias sta='cd $cst; ./run.py spanish_advanced -q 0 -ps 2 -cat ""'
+alias stae='cd $cst; ./run.py spanish_american_expressions -q 0 -ps 2 -cat ""'
+alias ste='cd $cst; ./run.py spanish_expressions -q 0 -ps 4 -cat ""'
+alias stv='cd $cst; ./run.py spanish_vulgar -q 0 -ps 4 -cat ""'
+alias st='cd $cst;  ./run.py $sp_s -q 0 -ps 1 -cat ""'
+alias sts='cd $cst;  ./run.py $sp_s -q 0 -ps 1 -cat "" -s 1 -av $sp_voice'
+alias sgr='cd $cst; ./grit.py -l spanish -v $sp_voice -s 0 -lu 1 -subjects $sp_s'
+alias sgrs='cd $cst; ./grit.py -l spanish -v $sp_voice -s 1 -lu 1 -subjects $sp_s'
+alias sgrw='cd $cst; grit_words.py -subjects $sp_s -file swords.out -one_per_line 1 >& sgrit.out; vi sgrit.out'
+alias sgptt='gpt -c spanish_translations -i'
+alias sgpttw='cd $cst; gpt -c spanish_translations -f swords.out'
+alias sfdt='cd $cst; ./find_dups.py $sp_s'
+alias ssay='say -v $sp_voice -r 100'
+alias smf='gpt1 tell me in exectly one word if this word is masculine or feminine in Spanish: '
+alias scv='gpt1 conjugate the following Spanish verbs in present, imparfait, passé composé, futur, conditionnel, subjonctif: '
+alias scr='gpt1 corrige ce français, mais ne pas ajouter d''astérisques autour de ta correction \(please do not add asterisks!\): ' 
+alias sti='gpt1 traduis ces mots italiens en français: '
+function sdsw() { calc "dayssince('01 04 2026')" | cut1; }
+function sdsww() { calc `sdsw`*25 | cut1; }
+
+alias fdt='ifdt; ffdt; sfdt'
 
 alias mdp='cd $cst; ./memdeck.py -pd 1' 
 alias mdrd='cd $cst; ./memdeck.py -rd 1 -pd 1'
