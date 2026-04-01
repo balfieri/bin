@@ -63,6 +63,7 @@ export mam=$d/Manuals/Aviation/Medical
 export mr=$d/Manuals/RT
 export w=$d/Websites
 export wc=$w/imustcook.com
+
 export av_s=aviation_vfr,aviation_ifr
 export en_voice=Samantha
 export it_lang_code=it-IT
@@ -173,6 +174,7 @@ alias isay='say -v $it_voice -r 120'
 alias imf='gpt1 tell me in exactly one word if this word is masculine or feminine in Italian: '
 alias icv='gpt1 conjugate the following Italian verbs in presente, imperfetto, passato prossimo, passato remoto, futuro, condizionale, congiuntivo, imperfetto congiuntivo: '
 alias itf='gpt1 traduci queste parole francesi in italiano: '
+alias its='gpt1 traduci queste parole spagnole in italiano: '
 alias icr='gpt1 correggi questo italiano, ma non aggiungere asterischi intorno alla correzione: '
 function idsw() { calc "dayssince('04 03 2026')" | cut1; }
 function idsww() { calc `idsw`*25 | cut1; }
@@ -202,6 +204,7 @@ alias fmf='gpt1 tell me in exectly one word if this word is masculine or feminin
 alias fcv='gpt1 conjugate the following French verbs in present, imparfait, passé composé, futur, conditionnel, subjonctif: '
 alias fcr='gpt1 corrige ce français, mais ne pas ajouter d''astérisques autour de ta correction \(please do not add asterisks!\): ' 
 alias fti='gpt1 traduis ces mots italiens en français: '
+alias fts='gpt1 traduis ces mots espagnols en français: '
 function fdsw() { calc "dayssince('12 03 2026')" | cut1; }
 function fdsww() { calc `fdsw`*25 | cut1; }
 
@@ -227,9 +230,10 @@ alias sgpttw='cd $cst; gpt -c spanish_translations -f swords.out'
 alias sfdt='cd $cst; ./find_dups.py $sp_s'
 alias ssay='say -v $sp_voice -r 100'
 alias smf='gpt1 tell me in exectly one word if this word is masculine or feminine in Spanish: '
-alias scv='gpt1 conjugate the following Spanish verbs in present, imparfait, passé composé, futur, conditionnel, subjonctif: '
-alias scr='gpt1 corrige ce français, mais ne pas ajouter d''astérisques autour de ta correction \(please do not add asterisks!\): ' 
-alias sti='gpt1 traduis ces mots italiens en français: '
+alias scv='gpt1 conjugate the following Spanish verbs in present, imperfecto, pretérito reciente, futuro, condicional, subjuntivo: '
+alias scr='gpt1 corrige este español, pero no añadas asteriscos alrededor de la corrección \(please do not add asterisks!\): ' 
+alias sti='gpt1 truduce estas palabras italianas al español: '
+alias stf='gpt1 truduce estas palabras francesas al español: '
 function sdsw() { calc "dayssince('01 04 2026')" | cut1; }
 function sdsww() { calc `sdsw`*25 | cut1; }
 
