@@ -24,7 +24,7 @@ def g2o( g ):   return k2p( g/1000.0 ) * 16.0
 def o2g( o ):   return p2k( o/16.0 ) * 1000.0
 
 # cm/m <-> in/ft
-def c2m( c ):   return c / 2.54
+def c2i( c ):   return c / 2.54
 def i2c( i ):   return i * 2.54
 def m2i( m ):   return c2i( m * 1000.0 )
 def i2m( i ):   return i2c( i) / 1000.0
