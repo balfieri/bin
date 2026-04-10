@@ -46,16 +46,16 @@ def lfv( L, N, LR, IR ): # L=initial loan, N=num periods, LR=loan rate of increa
         FV *= 1.0 + IR/100.0
     return FV
 
-# format should be: 30 11 2024
+# date_s format: DD MM YYYY
+# returns seconds since 1970
 def d2s( date_s ):
     date_obj = datetime.datetime.strptime( date_s, '%d %m %Y' )
     return time.mktime( date_obj.timetuple() )
 
-# current date string in same format
+# days since or until a certain DD MM YYYY
 def date(): 
     now = datetime.datetime.now()
     return now.strftime( '%d %m %Y' )
-
 def dayssince( date_s ): return (d2s( date() ) - d2s( date_s )) / (3600*24)
 def daysuntil( date_s ): return -dayssince( date_s )
 
