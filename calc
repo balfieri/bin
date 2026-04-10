@@ -7,23 +7,34 @@ import time
 
 def log2( n ):  return math.log( n ) / math.log( 2 )
 
-def f2c( f ):   return (f - 32.0) * 5.0/9.0
+# C <-> F
 def c2f( c ):   return c * 9.0/5.0 + 32
+def f2c( f ):   return (f - 32.0) * 5.0/9.0
 
+# km <-> mi
 def k2m( k ):   return k * 0.6213712
 def m2k( m ):   return m / 0.6213712
+
+# kg <-> lb
 def k2p( k ):   return k / 0.4535924
 def p2k( p ):   return p * 0.4535924
-def o2g( o ):   return p2k(o/16.0) * 1000.0
-def g2o( g ):   return k2p(g/1000.0) * 16.0
-def i2m( i ):   return i * 0.0254
-def m2i( m ):   return m / 0.0254
-def f2m( f ):   return i2m( 12* n )
-def m2f( m ):   return m2i( m ) / 12.0
-def bmi( w, h ):return w / (h*h)
-def h2i( h ):   return h * 0.02953;
-def i2h( i ):   return i / 0.02953;
 
+# g <-> oz
+def g2o( g ):   return k2p( g/1000.0 ) * 16.0
+def o2g( o ):   return p2k( o/16.0 ) * 1000.0
+
+# cm/m <-> in/ft
+def c2m( c ):   return c / 2.54
+def i2c( i ):   return i * 2.54
+def m2i( m ):   return c2i( m * 1000.0 )
+def i2m( i ):   return i2c( i) / 1000.0
+def m2f( m ):   return m2i( m ) / 12.0
+def f2m( f ):   return i2m( 12.0 * n )
+
+# body mass index
+def bmi( w, h ):return w / (h*h)
+
+# financial
 def cagr( BV, EV, N ): return ((EV/BV)**(1./N) - 1.0) * 100.0  # BV=beginning value, EV=ending value, N=num years
 def fv( PV, R, N ):    return PV * (1.0 + R/100.0)**N          
 def pv( FV, R, N ):    return FV / (1.0 + R/100.0)**N

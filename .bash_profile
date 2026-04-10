@@ -314,23 +314,21 @@ alias atv='atvremote -n "Family Room" --mrp-credentials `cat ~/mrp_fr_creds` cli
 alias py='${PYTHON}'
 
 # calc function shorthands
-function f2c()  { calc "f2c($1)"; }
 function c2f()  { calc "c2f($1)"; }
+function f2c()  { calc "f2c($1)"; }
 function k2m()  { calc "k2m($1)"; }
 function m2k()  { calc "m2k($1)"; }
-function p2k()  { calc "p2k($1)"; }
 function k2p()  { calc "k2p($1)"; }
-function o2g()  { calc "o2g($1)"; }
+function p2k()  { calc "p2k($1)"; }
 function g2o()  { calc "g2o($1)"; }
-function i2m()  { calc "i2m($1)"; }
+function o2g()  { calc "o2g($1)"; }
+function c2i()  { calc "c2i($1)"; }
+function i2c()  { calc "i2c($1)"; }
 function m2i()  { calc "m2i($1)"; }
-function f2m()  { calc "f2m($1)"; }
+function i2m()  { calc "i2m($1)"; }
 function m2f()  { calc "m2f($1)"; }
+function f2m()  { calc "f2m($1)"; }
 function bmi()  { calc "bmi(p2k($1), i2m(71))"; }
-function h2i()  { calc "h2i($1)"; }
-function i2h()  { calc "i2h($1)"; }
-function nv2mc() { calc "nv2mc($1)"; }
-function mc2nv() { calc "mc2nv($1)"; }
 function cagr() { calc "cagr($1, $2, $3)"; }
 function fv()   { calc "fv($1, $2, $3)"; }
 function pv()   { calc "pv($1, $2, $3)"; }
