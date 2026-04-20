@@ -234,7 +234,7 @@ alias scv='gpt1 conjugate the following Spanish verbs in present, imperfecto, pr
 alias scr='gpt1 corrige este español, pero no añadas asteriscos alrededor de la corrección \(please do not add asterisks!\): ' 
 alias sti='gpt1 truduce estas palabras italianas al español: '
 alias stf='gpt1 truduce estas palabras francesas al español: '
-function sdsw() { calc "dayssince('01 04 2026')" | cut1; }
+function sdsw() { calc "dayssince('17 04 2026')" | cut1; }
 function sdsww() { calc `sdsw`*25 | cut1; }
 
 alias fdt='ifdt; ffdt; sfdt'
