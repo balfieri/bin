@@ -23,6 +23,10 @@ def p2k( p ):   return p * 0.4535924
 def g2o( g ):   return k2p( g/1000.0 ) * 16.0
 def o2g( o ):   return p2k( o/16.0 ) * 1000.0
 
+# lit <-> gal
+def l2g( l ):   return l/3.78541
+def g2l( g ):   return g*3.78541
+
 # cm/m <-> in/ft
 def c2i( c ):   return c / 2.54
 def i2c( i ):   return i * 2.54
