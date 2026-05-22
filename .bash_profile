@@ -176,7 +176,7 @@ alias icv='gpt1 conjugate the following Italian verbs in presente, imperfetto, p
 alias itf='gpt1 traduci queste parole francesi in italiano: '
 alias its='gpt1 traduci queste parole spagnole in italiano: '
 alias icr='gpt1 correggi questo italiano, ma non aggiungere asterischi intorno alla correzione: '
-function idsw() { calc "dayssince('04 03 2026')" | cut1; }
+function idsw() { calc "dayssince('22 05 2026')" | cut1; }
 function idsww() { calc `idsw`*25 | cut1; }
 
 alias fvw='cd $cst; vi fwords.out'
